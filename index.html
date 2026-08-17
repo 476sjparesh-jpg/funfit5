@@ -29,7 +29,7 @@ body { background-color: var(--bg-dark); color: var(--text-main); min-height: 10
 header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-glow); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
 .brand-logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; color: var(--text-main); cursor: pointer; }
 .brand-logo span { color: var(--cyan); }
-.nav-actions { display: flex; gap: 1rem; }
+.nav-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .btn { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-glow); padding: 0.6rem 1.2rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; min-height: 44px; font-size: 0.9rem; }
 .btn:hover { background: var(--bg-card-hover); border-color: var(--cyan); box-shadow: var(--glow-cyan); transform: translateY(-2px); }
 .btn-primary { background: linear-gradient(135deg, var(--cyan), var(--purple)); border: none; color: #000; font-weight: 700; }
@@ -37,6 +37,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 .btn-danger { background: rgba(239, 68, 68, 0.1); border-color: var(--red); color: var(--red); }
 .btn-danger:hover { background: var(--red); color: #fff; }
 .btn-ghost { background: transparent; border-color: var(--bg-card-hover); }
+.btn-filter-active { background: var(--cyan) !important; color: #000 !important; font-weight: 700; box-shadow: var(--glow-cyan); }
 .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; flex: 1; }
 .view-section { display: none; animation: fadeIn 0.4s ease-in-out forwards; }
 .view-section.active { display: block; }
@@ -85,7 +86,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 1.4s infinite; }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
-.error-text { color: var(--red); font-size: 0.85rem; margin-top: -0.5rem; }
+.error-text { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; }
 @media print {
   body { background: #fff !important; color: #000 !important; }
   header, .nav-actions, .btn, .no-print { display: none !important; }
@@ -106,6 +107,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 <header>
   <div class="brand-logo" onclick="window.app.router.navigate('hero-view')">⚡ FIT<span>5</span></div>
   <div class="nav-actions">
+    <button class="btn" onclick="window.app.participantLogin.openModal()">📱 Participant Login</button>
     <button class="btn" onclick="window.app.router.navigate('leaderboard-view')">🏆 Leaderboard</button>
     <button class="btn" id="admin-nav-btn" onclick="window.app.admin.openModal()">🔒 Admin Login</button>
   </div>
@@ -133,6 +135,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <h2 style="margin-bottom: 1.5rem; text-align: center;">Participant Registration</h2>
       <form id="registration-form" onsubmit="window.app.handlers.handleRegistration(event)">
         <div class="form-group"><label for="reg-name">Full Name</label><input type="text" id="reg-name" class="form-control" required placeholder="e.g. Alex Smith"></div>
+        <div class="form-group"><label for="reg-phone">Phone Number (For Accessing Report Later)</label><input type="tel" id="reg-phone" class="form-control" required placeholder="e.g. 9876543210" pattern="[0-9]{10}"></div>
         <div class="grid-2">
           <div class="form-group"><label for="reg-age">Age (Years)</label><input type="number" id="reg-age" class="form-control" required min="10" max="80" placeholder="e.g. 21"></div>
           <div class="form-group"><label for="reg-gender">Gender</label>
@@ -171,7 +174,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
     <div class="grid-2" style="margin-bottom: 1.5rem;">
       <div class="card" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <h3 id="report-participant-name" style="font-size: 1.8rem;">Participant Name</h3>
-        <p id="report-participant-meta" style="color: var(--text-muted); margin-bottom: 1.5rem;">Age: -- | Gender: --</p>
+        <p id="report-participant-meta" style="color: var(--text-muted); margin-bottom: 1.5rem;">Age: -- | Gender: -- | Phone: --</p>
         <div class="score-ring-container">
           <svg class="score-ring-svg"><circle class="score-ring-bg" cx="90" cy="90" r="70"></circle><circle id="report-score-ring" class="score-ring-fill" cx="90" cy="90" r="70"></circle></svg>
           <div class="score-ring-text"><div class="val" id="report-overall-score">0</div><div class="lbl">Overall Index</div></div>
@@ -205,17 +208,17 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
     <div class="card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
         <h2 style="display:flex; align-items:center; gap:0.75rem;">Exhibition Leaderboard <span class="sync-pill"><span class="sync-dot"></span>Live Sync</span></h2>
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-          <button class="btn btn-primary" onclick="window.app.leaderboard.filter('overall')">Overall Score</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('darts')">Darts</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('plank')">Plank</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('pushups')">Push-ups</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('balance')">Balance</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('reaction')">Reaction</button>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;" id="leaderboard-filter-buttons">
+          <button class="btn btn-filter-active" onclick="window.app.leaderboard.filter('overall', this)">Overall Score</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('darts', this)">Darts</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('plank', this)">Plank</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('pushups', this)">Push-ups</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('balance', this)">Balance</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('reaction', this)">Reaction</button>
         </div>
       </div>
       <table class="data-table">
-        <thead><tr><th>Rank</th><th>Participant</th><th>Age</th><th>Overall Index</th><th>Top Metric</th></tr></thead>
+        <thead><tr><th>Rank</th><th>Participant</th><th>Age</th><th>Overall Index</th><th id="top-metric-header-title">Top Metric</th></tr></thead>
         <tbody id="leaderboard-table-body"></tbody>
       </table>
     </div>
@@ -249,6 +252,22 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 
 </main>
 
+<div id="participant-login-modal" class="modal-overlay">
+  <div class="modal-box" style="text-align:left;">
+    <button class="modal-close" onclick="window.app.participantLogin.closeModal()">✕</button>
+    <h3 style="margin-bottom:0.5rem; text-align:center;">📱 Participant Login</h3>
+    <p style="color: var(--text-muted); font-size: 0.85rem; text-align:center; margin-bottom:1.5rem;">Enter your registered 10-digit phone number to retrieve your personal fitness report.</p>
+    <form onsubmit="window.app.participantLogin.login(event)">
+      <div class="form-group">
+        <label for="user-phone-input">Registered Phone Number</label>
+        <input type="tel" id="user-phone-input" class="form-control" placeholder="e.g. 9876543210" pattern="[0-9]{10}" required>
+      </div>
+      <p class="error-text" id="phone-login-error" style="display:none; text-align:center;"></p>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Access My Report 📊</button>
+    </form>
+  </div>
+</div>
+
 <div id="result-modal" class="modal-overlay">
   <div class="modal-box">
     <h2 id="modal-station-title">Station Complete!</h2>
@@ -266,7 +285,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
     <form onsubmit="window.app.admin.login(event)">
       <div class="form-group"><label for="admin-email">Admin Email</label><input type="email" id="admin-email" class="form-control" required></div>
       <div class="form-group"><label for="admin-pass">Password</label><input type="password" id="admin-pass" class="form-control" required></div>
-      <p class="error-text hidden" id="admin-error" style="display:none;">Invalid login credentials.</p>
+      <p class="error-text" id="admin-error" style="display:none;">Invalid login credentials.</p>
       <button type="submit" class="btn btn-primary" style="width:100%; margin-top:0.5rem;">Log In</button>
     </form>
   </div>
@@ -294,6 +313,14 @@ const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 const assessmentsCol = collection(db, "assessments");
 
+const stationMeta = {
+  darts: { label: 'Dart Precision', name: 'Darts', emoji: '🎯' },
+  plank: { label: 'Core Plank Hold', name: 'Plank', emoji: '🧘' },
+  pushups: { label: '30-Sec Push-ups', name: 'Push-ups', emoji: '💪' },
+  balance: { label: 'Balance Master', name: 'Balance', emoji: '⚖️' },
+  reaction: { label: 'Reaction Time', name: 'Reaction', emoji: '🎾' }
+};
+
 const appInstance = {
   config: { dartThrows: 3, pushupDuration: 30, plankCap: 180, reactionTrials: 3, gravity: 9.81 },
   state: {
@@ -312,6 +339,45 @@ const appInstance = {
       if (target) { target.classList.add('active'); window.app.state.currentView = viewId; }
       if (viewId === 'leaderboard-view') window.app.leaderboard.render();
       if (viewId === 'organizer-view') window.app.organizer.loadForm();
+    }
+  },
+
+  participantLogin: {
+    openModal() {
+      document.getElementById('phone-login-error').style.display = 'none';
+      document.getElementById('user-phone-input').value = '';
+      document.getElementById('participant-login-modal').classList.add('active');
+    },
+    closeModal() {
+      document.getElementById('participant-login-modal').classList.remove('active');
+    },
+    login(e) {
+      e.preventDefault();
+      const phoneInput = document.getElementById('user-phone-input').value.trim();
+      const errEl = document.getElementById('phone-login-error');
+      
+      const matched = window.app.state.participantsHistory.filter(p => String(p.phone).trim() === phoneInput);
+      
+      if (matched.length === 0) {
+        errEl.textContent = 'No records found for this phone number. Please check the number or register first.';
+        errEl.style.display = 'block';
+        return;
+      }
+      
+      matched.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+      const record = matched[0];
+      
+      window.app.state.currentParticipant = record;
+      window.app.state.stationResults = {
+        darts: { raw: record.rawMetrics?.darts ?? record.scores.darts, score: record.scores.darts, category: window.app.scoring.getCategory(record.scores.darts) },
+        plank: { raw: record.rawMetrics?.plank ?? record.scores.plank, score: record.scores.plank, category: window.app.scoring.getCategory(record.scores.plank) },
+        pushups: { raw: record.rawMetrics?.pushups ?? record.scores.pushups, score: record.scores.pushups, category: window.app.scoring.getCategory(record.scores.pushups) },
+        balance: { raw: record.rawMetrics?.balance ?? record.scores.balance, score: record.scores.balance, category: window.app.scoring.getCategory(record.scores.balance) },
+        reaction: { raw: record.rawMetrics?.reaction ?? record.scores.reactionMS, score: record.scores.reaction, category: window.app.scoring.getCategory(record.scores.reaction) }
+      };
+
+      this.closeModal();
+      window.app.report.renderSavedReport(record);
     }
   },
 
@@ -360,9 +426,9 @@ const appInstance = {
     exportCSV() {
       const list = window.app.state.participantsHistory;
       if (list.length === 0) { alert("No records available to export."); return; }
-      let csv = "ID,Name,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionMS\n";
+      let csv = "ID,Name,Phone,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionMS\n";
       list.forEach(p => {
-        csv += `"${p.id}","${p.name}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionMS}\n`;
+        csv += `"${p.id}","${p.name}","${p.phone || ''}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionMS}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
@@ -399,6 +465,7 @@ const appInstance = {
       window.app.state.currentParticipant = {
         id: 'P-' + Math.floor(1000 + Math.random() * 9000),
         name: document.getElementById('reg-name').value,
+        phone: document.getElementById('reg-phone').value,
         age: parseInt(document.getElementById('reg-age').value),
         gender: document.getElementById('reg-gender').value,
         height: h * 100, weight: w, bmi: (w / (h * h)).toFixed(1)
@@ -610,17 +677,26 @@ const appInstance = {
 
       const fullRecord = {
         ...p, overallScore: avgScore,
+        rawMetrics: {
+          darts: res.darts?.raw ?? 0, plank: res.plank?.raw ?? 0, pushups: res.pushups?.raw ?? 0,
+          balance: res.balance?.raw ?? 0, reaction: res.reaction?.raw ?? 0
+        },
         scores: {
           darts: res.darts?.score || 0, plank: res.plank?.score || 0, pushups: res.pushups?.score || 0,
           balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionMS: res.reaction?.raw ?? null
         }
       };
       window.app.storage.saveRecord(fullRecord);
+      this.renderSavedReport(fullRecord);
+    },
+    renderSavedReport(record) {
+      const keys = ['darts', 'plank', 'pushups', 'balance', 'reaction'];
+      const res = window.app.state.stationResults;
 
-      document.getElementById('report-participant-name').textContent = p.name;
-      document.getElementById('report-participant-meta').textContent = `Age: ${p.age} | Gender: ${p.gender} | BMI: ${p.bmi}`;
-      document.getElementById('report-overall-score').textContent = avgScore;
-      const strokeOffset = 440 - (440 * avgScore) / 100;
+      document.getElementById('report-participant-name').textContent = record.name;
+      document.getElementById('report-participant-meta').textContent = `Age: ${record.age} | Gender: ${record.gender} | Phone: ${record.phone || 'N/A'} | BMI: ${record.bmi}`;
+      document.getElementById('report-overall-score').textContent = record.overallScore;
+      const strokeOffset = 440 - (440 * record.overallScore) / 100;
       document.getElementById('report-score-ring').style.strokeDashoffset = strokeOffset;
 
       const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: '30-Sec Push-ups', balance: 'Balance Master', reaction: 'Reaction Time' };
@@ -636,7 +712,7 @@ const appInstance = {
       document.getElementById('report-strength-text').textContent = `${entries[0].name} (${entries[0].score} / 100)`;
       document.getElementById('report-weakness-text').textContent = `${entries[entries.length - 1].name} (${entries[entries.length - 1].score} / 100)`;
       document.getElementById('report-summary-sentence').textContent =
-        `Participant ${p.name} completed the FIT5 Exhibition Assessment with an overall Fitness Index of ${avgScore} / 100. Strongest performance was in ${entries[0].name.toLowerCase()}, with the greatest opportunity for growth in ${entries[entries.length - 1].name.toLowerCase()}.`;
+        `Participant ${record.name} completed the FIT5 Exhibition Assessment with an overall Fitness Index of ${record.overallScore} / 100. Strongest performance was in ${entries[0].name.toLowerCase()}, with the greatest opportunity for growth in ${entries[entries.length - 1].name.toLowerCase()}.`;
 
       this.drawRadarChart(keys.map(k => res[k]?.score || 0));
       window.app.router.navigate('report-view');
@@ -684,17 +760,71 @@ const appInstance = {
 
   leaderboard: {
     currentFilter: 'overall',
-    filter(type) { this.currentFilter = type; this.render(); },
+    filter(type, btnElem) {
+      this.currentFilter = type;
+      if (btnElem) {
+        document.querySelectorAll('#leaderboard-filter-buttons .btn').forEach(b => b.classList.remove('btn-filter-active'));
+        btnElem.classList.add('btn-filter-active');
+      }
+      this.render();
+    },
+    getTopMetricInfo(p) {
+      if (!p.scores) return { text: 'N/A', emoji: '📊' };
+      const keys = ['darts', 'plank', 'pushups', 'balance', 'reaction'];
+      let topKey = 'darts';
+      let maxScore = -1;
+
+      keys.forEach(k => {
+        const score = p.scores[k] || 0;
+        if (score > maxScore) {
+          maxScore = score;
+          topKey = k;
+        }
+      });
+
+      return {
+        text: `${stationMeta[topKey].name} (${maxScore})`,
+        emoji: stationMeta[topKey].emoji
+      };
+    },
     render() {
       const tbody = document.getElementById('leaderboard-table-body');
+      const headerTitle = document.getElementById('top-metric-header-title');
       let list = [...window.app.state.participantsHistory];
-      if (list.length === 0) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No participants recorded yet.</td></tr>`; return; }
-      list.sort((a, b) => this.currentFilter === 'overall' ? b.overallScore - a.overallScore : (b.scores?.[this.currentFilter] || 0) - (a.scores?.[this.currentFilter] || 0));
+      
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No participants recorded yet.</td></tr>`;
+        return;
+      }
+
+      const isOverall = this.currentFilter === 'overall';
+      headerTitle.textContent = isOverall ? 'Top Metric' : `${stationMeta[this.currentFilter].name} Score`;
+
+      list.sort((a, b) => {
+        if (isOverall) return b.overallScore - a.overallScore;
+        return (b.scores?.[this.currentFilter] || 0) - (a.scores?.[this.currentFilter] || 0);
+      });
+
       tbody.innerHTML = list.map((p, index) => {
         const nameParts = (p.name || 'Anonymous').split(' ');
         const anonName = nameParts[0] + (nameParts[1] ? ` ${nameParts[1][0]}.` : '');
-        const top = p.scores?.darts >= 80 ? '🎯 Darts' : p.scores?.plank >= 80 ? '🧘 Plank' : p.scores?.pushups >= 80 ? '💪 Push-ups' : p.scores?.balance >= 80 ? '⚖️ Balance' : '🎾 Reaction';
-        return `<tr><td><strong>#${index + 1}</strong></td><td>${anonName}</td><td>${p.age}</td><td><strong style="color: var(--cyan);">${p.overallScore}</strong> / 100</td><td>${top}</td></tr>`;
+
+        let metricDisplay = '';
+        if (isOverall) {
+          const topMeta = this.getTopMetricInfo(p);
+          metricDisplay = `${topMeta.emoji} ${topMeta.text}`;
+        } else {
+          const score = p.scores?.[this.currentFilter] || 0;
+          metricDisplay = `${stationMeta[this.currentFilter].emoji} ${score} / 100`;
+        }
+
+        return `<tr>
+          <td><strong>#${index + 1}</strong></td>
+          <td>${anonName}</td>
+          <td>${p.age}</td>
+          <td><strong style="color: var(--cyan);">${p.overallScore}</strong> / 100</td>
+          <td>${metricDisplay}</td>
+        </tr>`;
       }).join('');
     }
   },
