@@ -191,7 +191,8 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <div class="card" style="border-left: 4px solid var(--yellow);"><h4 style="color: var(--yellow);">🎯 Recommended Focus Area</h4><p id="report-weakness-text" style="margin-top: 0.5rem; color: var(--text-muted);">--</p></div>
     </div>
     <div class="card" style="background: rgba(0, 229, 255, 0.05); border-color: var(--cyan);"><h4>📋 Assessment Summary</h4><p id="report-summary-sentence" style="margin-top: 0.5rem;"></p></div>
-    <div class="no-print" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+    <div class="no-print" style="display: flex; gap: 1rem; justify-content: flex-end; flex-wrap: wrap; margin-top: 1.5rem;">
+      <button class="btn" onclick="window.app.router.navigate('hero-view')">🏠 Back to Home</button>
       <button class="btn" onclick="window.print()">🖨 Print / Save PDF</button>
       <button class="btn btn-primary" onclick="window.app.router.navigate('leaderboard-view')">View Leaderboard 🏆</button>
     </div>
@@ -435,35 +436,35 @@ const appInstance = {
       const station = this.stations[window.app.state.currentStationIndex];
       let html = `<h2 style="margin-bottom: 1rem;">${station.title}</h2>`;
       if (station.id === 'darts') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts. Enter the total combined score.</p>
+        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the standard target. Log cumulative total score.</p>
           <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="dart-input-score">Total Combined Score</label>
-          <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 50}" placeholder="e.g. 24"></div>
-          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('darts')">Log Score</button>`;
+          <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 60}" value="0"></div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('darts')">Submit Score</button>`;
       } else if (station.id === 'plank') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Maintain correct forearm plank position as long as possible.</p>
+        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Maintain correct forearm plank posture. Time ends on form break.</p>
           <div class="timer-display" id="plank-timer-disp">00:00</div>
           <div style="display: flex; gap: 1rem; justify-content: center;">
           <button class="btn btn-primary" onclick="window.app.testing.startStopwatch()">Start Timer</button>
           <button class="btn btn-danger" onclick="window.app.testing.stopStopwatch()">Stop / Hold Complete</button></div>`;
       } else if (station.id === 'jacks') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Perform max completed jumping jacks within the countdown.</p>
+        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Perform max completed jumping jacks within ${window.app.config.jackDuration} seconds.</p>
           <div class="timer-display" id="jack-timer-disp">${window.app.config.jackDuration}s</div>
           <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
           <button class="btn btn-primary" onclick="window.app.testing.startCountdown(${window.app.config.jackDuration})">Start Countdown</button></div>
           <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="jack-count-input">Total Completed Jacks</label>
           <input type="number" id="jack-count-input" class="form-control" value="0" min="0"></div>
-          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('jacks')">Log Score</button>`;
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('jacks')">Log Cadence</button>`;
       } else if (station.id === 'balance') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Single-leg balance with eyes closed until touchdown.</p>
+        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Single-leg balance with eyes closed. Timer stops when non-supporting foot touches ground.</p>
           <div class="timer-display" id="balance-timer-disp">0.0s</div>
           <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn btn-primary" onclick="window.app.testing.startPrecisionTimer()">Start Balance</button>
+          <button class="btn btn-primary" onclick="window.app.testing.startPrecisionTimer()">Start Balance Test</button>
           <button class="btn btn-danger" onclick="window.app.testing.stopPrecisionTimer()">Touchdown / Stop</button></div>`;
       } else if (station.id === 'reaction') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Catch dropped ruler/ball. Record the drop distance in centimeters.</p>
+        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Catch dropped ruler/ball. Record drop distance in centimeters to convert to milliseconds.</p>
           <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="reaction-dist-input">Recorded Drop Distance (cm)</label>
-          <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15"></div>
-          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Log Score</button>`;
+          <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15" min="1" max="100"></div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Calculate Reaction Time</button>`;
       }
       container.innerHTML = html;
     },
