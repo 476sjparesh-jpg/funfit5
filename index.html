@@ -105,7 +105,10 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 </head>
 <body>
 <header>
-  <div class="brand-logo" onclick="window.app.router.navigate('hero-view')">⚡ FIT<span>5</span></div>
+  <div class="brand-logo" onclick="window.app.router.navigate('hero-view')"><div class="brand-logo" onclick="window.app.router.navigate('hero-view')">
+  <img src="⚡" alt="FIT5 Logo" style="height: 36px; width: auto; object-fit: contain;">
+  <span>FIT5</span>
+</div> FIT<span>5</span></div>
   <div class="nav-actions">
     <button class="btn" onclick="window.app.participantLogin.openModal()">📱 Participant Login</button>
     <button class="btn" onclick="window.app.router.navigate('leaderboard-view')">🏆 Leaderboard</button>
