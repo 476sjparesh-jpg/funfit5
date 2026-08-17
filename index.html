@@ -57,7 +57,10 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 .step-item.active { border-color: var(--cyan); color: var(--cyan); box-shadow: var(--glow-cyan); }
 .step-item.completed { background: var(--green); border-color: var(--green); color: #000; }
 .step-item.skipped { background: var(--yellow); border-color: var(--yellow); color: #000; }
-.timer-display { font-size: 4rem; font-family: monospace; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-cyan); text-align: center; margin: 1.5rem 0; }
+.timer-display { font-size: 4rem; font-family: monospace; font-weight: 800; color: var(--cyan); text-shadow: var(--glow-cyan); text-align: center; margin: 1rem 0; }
+.counter-box { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 1rem 0; }
+.counter-btn { width: 50px; height: 50px; font-size: 1.8rem; border-radius: 50%; background: var(--bg-card-hover); border: 1px solid var(--cyan); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
+.counter-btn:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-cyan); }
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
 .modal-overlay.active { display: flex; }
 .modal-box { background: var(--bg-card); border: 2px solid var(--cyan); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; box-shadow: var(--glow-cyan); position: relative; }
@@ -119,7 +122,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
     <div class="grid-5" style="margin-top: 2rem;">
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div><h3>Dart Precision</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Hand-eye accuracy</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🧘</div><h3>Core Plank</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Core endurance</p></div>
-      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">⏱️</div><h3>Jumping Jacks</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">30-second cadence</p></div>
+      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div><h3>Push-ups</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Upper body endurance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">⚖️</div><h3>Balance Master</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Single-leg balance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎾</div><h3>Reaction Catch</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Drop reaction time</p></div>
     </div>
@@ -158,8 +161,8 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <div class="step-item" id="step-btn-4">4</div>
       <div class="step-item" id="step-btn-5">5</div>
     </div>
-    <div id="station-container" class="card"></div>
-    <div class="no-print" style="display:flex; justify-content:flex-end;">
+    <div id="station-container" class="card" style="max-width: 600px; margin: 0 auto 1.5rem auto;"></div>
+    <div class="no-print" style="display:flex; justify-content:center;">
       <button class="btn btn-ghost" onclick="window.app.testing.skipStation()">⏭ Skip This Exercise</button>
     </div>
   </section>
@@ -206,7 +209,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
           <button class="btn btn-primary" onclick="window.app.leaderboard.filter('overall')">Overall Score</button>
           <button class="btn" onclick="window.app.leaderboard.filter('darts')">Darts</button>
           <button class="btn" onclick="window.app.leaderboard.filter('plank')">Plank</button>
-          <button class="btn" onclick="window.app.leaderboard.filter('jacks')">Jacks</button>
+          <button class="btn" onclick="window.app.leaderboard.filter('pushups')">Push-ups</button>
           <button class="btn" onclick="window.app.leaderboard.filter('balance')">Balance</button>
           <button class="btn" onclick="window.app.leaderboard.filter('reaction')">Reaction</button>
         </div>
@@ -227,7 +230,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <form id="settings-form" onsubmit="window.app.organizer.saveSettings(event)">
         <div class="grid-2">
           <div class="form-group"><label for="cfg-dart-throws">Dart Throws Target Count</label><input type="number" id="cfg-dart-throws" class="form-control" value="3" min="1" max="10"></div>
-          <div class="form-group"><label for="cfg-jack-timer">Jumping Jacks Duration (Seconds)</label><input type="number" id="cfg-jack-timer" class="form-control" value="30" min="10" max="60"></div>
+          <div class="form-group"><label for="cfg-pushup-timer">Push-ups Duration (Seconds)</label><input type="number" id="cfg-pushup-timer" class="form-control" value="30" min="10" max="60"></div>
         </div>
         <div class="grid-2">
           <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="180" min="30" max="600"></div>
@@ -276,7 +279,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-// ---- Replace with your Firebase Console credentials ----
 const firebaseConfig = {
   apiKey: "AIzaSyBJKH-LtNjZmW1WiBGMuQ2mrarxEs2Zqn8",
   authDomain: "fit5-e1acc.firebaseapp.com",
@@ -293,7 +295,7 @@ const auth = getAuth(firebaseApp);
 const assessmentsCol = collection(db, "assessments");
 
 const appInstance = {
-  config: { dartThrows: 3, jackDuration: 30, plankCap: 180, reactionTrials: 3, gravity: 9.81 },
+  config: { dartThrows: 3, pushupDuration: 30, plankCap: 180, reactionTrials: 3, gravity: 9.81 },
   state: {
     currentView: 'hero-view', currentParticipant: null, currentStationIndex: 0,
     stationResults: {}, activeTimer: null, timerSeconds: 0, participantsHistory: [], isAdmin: false
@@ -358,9 +360,9 @@ const appInstance = {
     exportCSV() {
       const list = window.app.state.participantsHistory;
       if (list.length === 0) { alert("No records available to export."); return; }
-      let csv = "ID,Name,Age,Gender,BMI,OverallScore,Darts,Plank,Jacks,Balance,ReactionMS\n";
+      let csv = "ID,Name,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionMS\n";
       list.forEach(p => {
-        csv += `"${p.id}","${p.name}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.jacks},${p.scores.balance},${p.scores.reactionMS}\n`;
+        csv += `"${p.id}","${p.name}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionMS}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
@@ -410,11 +412,11 @@ const appInstance = {
 
   testing: {
     stations: [
-      { id: 'darts', title: '🎯 Station 1: Dart Precision Catch' },
-      { id: 'plank', title: '🧘 Station 2: Core Hold Plank' },
-      { id: 'jacks', title: '⏱️ Station 3: 30-Sec Jumping Jacks' },
+      { id: 'darts', title: '🎯 Station 1: Dart Precision' },
+      { id: 'plank', title: '🧘 Station 2: Core Plank Hold' },
+      { id: 'pushups', title: '💪 Station 3: 30-Sec Push-ups' },
       { id: 'balance', title: '⚖️ Station 4: Static Balance Master' },
-      { id: 'reaction', title: '🎾 Station 5: Tennis Ball Reaction' }
+      { id: 'reaction', title: '🎾 Station 5: Reaction Catch' }
     ],
     updateStepper() {
       for (let i = 1; i <= 5; i++) {
@@ -434,39 +436,72 @@ const appInstance = {
       clearInterval(window.app.state.activeTimer);
       const container = document.getElementById('station-container');
       const station = this.stations[window.app.state.currentStationIndex];
-      let html = `<h2 style="margin-bottom: 1rem;">${station.title}</h2>`;
+      let html = `<h2 style="margin-bottom: 0.5rem; text-align: center;">${station.title}</h2>`;
+      
       if (station.id === 'darts') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the standard target. Log cumulative total score.</p>
-          <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="dart-input-score">Total Combined Score</label>
-          <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 60}" value="0"></div>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the standard target. Log the combined total score.</p>
+          <div class="form-group" style="max-width: 320px; margin: 0 auto;">
+            <label for="dart-input-score">Total Combined Score</label>
+            <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 60}" value="0">
+          </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('darts')">Submit Score</button>`;
       } else if (station.id === 'plank') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Maintain correct forearm plank posture. Time ends on form break.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Maintain proper forearm plank posture. Time ends on form break.</p>
           <div class="timer-display" id="plank-timer-disp">00:00</div>
-          <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn btn-primary" onclick="window.app.testing.startStopwatch()">Start Timer</button>
-          <button class="btn btn-danger" onclick="window.app.testing.stopStopwatch()">Stop / Hold Complete</button></div>`;
-      } else if (station.id === 'jacks') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Perform max completed jumping jacks within ${window.app.config.jackDuration} seconds.</p>
-          <div class="timer-display" id="jack-timer-disp">${window.app.config.jackDuration}s</div>
           <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
-          <button class="btn btn-primary" onclick="window.app.testing.startCountdown(${window.app.config.jackDuration})">Start Countdown</button></div>
-          <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="jack-count-input">Total Completed Jacks</label>
-          <input type="number" id="jack-count-input" class="form-control" value="0" min="0"></div>
-          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('jacks')">Log Cadence</button>`;
+            <button class="btn btn-primary" onclick="window.app.testing.startStopwatch()">Start Timer</button>
+            <button class="btn btn-danger" onclick="window.app.testing.stopStopwatch()">Stop / Record</button>
+          </div>
+          <div class="form-group" style="max-width: 320px; margin: 0 auto;">
+            <label for="plank-input-score">Plank Duration (Seconds)</label>
+            <input type="number" id="plank-input-score" class="form-control" value="0" min="0">
+          </div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('plank')">Submit Score</button>`;
+      } else if (station.id === 'pushups') {
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 0.5rem;">Perform max completed push-ups in ${window.app.config.pushupDuration} seconds.</p>
+          <div class="timer-display" id="pushup-timer-disp">${window.app.config.pushupDuration}s</div>
+          <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+            <button class="btn btn-primary" onclick="window.app.testing.startCountdown(${window.app.config.pushupDuration})">Start 30s Timer</button>
+          </div>
+          <div class="counter-box">
+            <button class="counter-btn" onclick="window.app.testing.adjustPushups(-1)">-</button>
+            <div style="font-size: 2.2rem; font-weight: 800; min-width: 60px; text-align: center;" id="pushup-counter-disp">0</div>
+            <button class="counter-btn" onclick="window.app.testing.adjustPushups(1)">+</button>
+          </div>
+          <div class="form-group" style="max-width: 320px; margin: 1rem auto 0 auto;">
+            <label for="pushup-count-input">Total Completed Push-ups</label>
+            <input type="number" id="pushup-count-input" class="form-control" value="0" min="0" oninput="document.getElementById('pushup-counter-disp').textContent = this.value">
+          </div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('pushups')">Submit Score</button>`;
       } else if (station.id === 'balance') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1rem;">Single-leg balance with eyes closed. Timer stops when non-supporting foot touches ground.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Single-leg balance with eyes closed. Timer stops when foot touches ground.</p>
           <div class="timer-display" id="balance-timer-disp">0.0s</div>
-          <div style="display: flex; gap: 1rem; justify-content: center;">
-          <button class="btn btn-primary" onclick="window.app.testing.startPrecisionTimer()">Start Balance Test</button>
-          <button class="btn btn-danger" onclick="window.app.testing.stopPrecisionTimer()">Touchdown / Stop</button></div>`;
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
+            <button class="btn btn-primary" onclick="window.app.testing.startPrecisionTimer()">Start Timer</button>
+            <button class="btn btn-danger" onclick="window.app.testing.stopPrecisionTimer()">Touchdown / Stop</button>
+          </div>
+          <div class="form-group" style="max-width: 320px; margin: 0 auto;">
+            <label for="balance-input-score">Balance Hold Time (Seconds)</label>
+            <input type="number" id="balance-input-score" step="0.1" class="form-control" value="0" min="0">
+          </div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('balance')">Submit Score</button>`;
       } else if (station.id === 'reaction') {
-        html += `<p style="color: var(--text-muted); margin-bottom: 1.5rem;">Catch dropped ruler/ball. Record drop distance in centimeters to convert to milliseconds.</p>
-          <div class="form-group" style="max-width: 300px; margin: 0 auto;"><label for="reaction-dist-input">Recorded Drop Distance (cm)</label>
-          <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15" min="1" max="100"></div>
-          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Calculate Reaction Time</button>`;
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Catch dropped ruler. Record drop distance in cm to convert to reaction time.</p>
+          <div class="form-group" style="max-width: 320px; margin: 0 auto;">
+            <label for="reaction-dist-input">Recorded Drop Distance (cm)</label>
+            <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15" min="1" max="100">
+          </div>
+          <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Submit Score</button>`;
       }
       container.innerHTML = html;
+    },
+    adjustPushups(delta) {
+      const input = document.getElementById('pushup-count-input');
+      const disp = document.getElementById('pushup-counter-disp');
+      let val = (parseInt(input.value) || 0) + delta;
+      if (val < 0) val = 0;
+      input.value = val;
+      if (disp) disp.textContent = val;
     },
     startStopwatch() {
       clearInterval(window.app.state.activeTimer);
@@ -476,18 +511,22 @@ const appInstance = {
         const m = String(Math.floor(window.app.state.timerSeconds / 60)).padStart(2, '0');
         const s = String(window.app.state.timerSeconds % 60).padStart(2, '0');
         const disp = document.getElementById('plank-timer-disp');
+        const input = document.getElementById('plank-input-score');
         if (disp) disp.textContent = `${m}:${s}`;
+        if (input) input.value = window.app.state.timerSeconds;
       }, 1000);
     },
-    stopStopwatch() { clearInterval(window.app.state.activeTimer); this.saveStationScore('plank', window.app.state.timerSeconds); },
+    stopStopwatch() {
+      clearInterval(window.app.state.activeTimer);
+    },
     startCountdown(seconds) {
       clearInterval(window.app.state.activeTimer);
       let left = seconds;
       window.app.state.activeTimer = setInterval(() => {
         left--;
-        const disp = document.getElementById('jack-timer-disp');
+        const disp = document.getElementById('pushup-timer-disp');
         if (disp) disp.textContent = `${left}s`;
-        if (left <= 0) { clearInterval(window.app.state.activeTimer); alert("Time's Up! Count your completed repetitions."); }
+        if (left <= 0) { clearInterval(window.app.state.activeTimer); alert("Time's Up! Check your total completed push-ups."); }
       }, 1000);
     },
     startPrecisionTimer() {
@@ -497,16 +536,20 @@ const appInstance = {
         let elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
         window.app.state.timerSeconds = parseFloat(elapsed);
         const disp = document.getElementById('balance-timer-disp');
+        const input = document.getElementById('balance-input-score');
         if (disp) disp.textContent = `${elapsed}s`;
+        if (input) input.value = elapsed;
       }, 100);
     },
-    stopPrecisionTimer() { clearInterval(window.app.state.activeTimer); this.saveStationScore('balance', window.app.state.timerSeconds); },
-    saveStationScore(type, manualValue = null) {
+    stopPrecisionTimer() {
+      clearInterval(window.app.state.activeTimer);
+    },
+    saveStationScore(type) {
       let rawVal = 0;
       if (type === 'darts') rawVal = parseInt(document.getElementById('dart-input-score').value) || 0;
-      else if (type === 'plank') rawVal = manualValue;
-      else if (type === 'jacks') rawVal = parseInt(document.getElementById('jack-count-input').value) || 0;
-      else if (type === 'balance') rawVal = manualValue;
+      else if (type === 'plank') rawVal = parseFloat(document.getElementById('plank-input-score').value) || 0;
+      else if (type === 'pushups') rawVal = parseInt(document.getElementById('pushup-count-input').value) || 0;
+      else if (type === 'balance') rawVal = parseFloat(document.getElementById('balance-input-score').value) || 0;
       else if (type === 'reaction') {
         const distCM = parseFloat(document.getElementById('reaction-dist-input').value) || 30;
         const distMeters = distCM / 100;
@@ -544,7 +587,7 @@ const appInstance = {
       let score = 0;
       if (type === 'darts') score = (raw / (window.app.config.dartThrows * 50)) * 100;
       else if (type === 'plank') score = (raw / window.app.config.plankCap) * 100;
-      else if (type === 'jacks') score = (raw / 50) * 100;
+      else if (type === 'pushups') score = (raw / 40) * 100;
       else if (type === 'balance') score = (raw / 60) * 100;
       else if (type === 'reaction') score = ((400 - raw) / (400 - 100)) * 100;
       return Math.min(100, Math.max(0, Math.round(score)));
@@ -562,13 +605,13 @@ const appInstance = {
     generate() {
       const p = window.app.state.currentParticipant;
       const res = window.app.state.stationResults;
-      const keys = ['darts', 'plank', 'jacks', 'balance', 'reaction'];
+      const keys = ['darts', 'plank', 'pushups', 'balance', 'reaction'];
       const avgScore = Math.round(keys.reduce((sum, k) => sum + (res[k]?.score || 0), 0) / keys.length);
 
       const fullRecord = {
         ...p, overallScore: avgScore,
         scores: {
-          darts: res.darts?.score || 0, plank: res.plank?.score || 0, jacks: res.jacks?.score || 0,
+          darts: res.darts?.score || 0, plank: res.plank?.score || 0, pushups: res.pushups?.score || 0,
           balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionMS: res.reaction?.raw ?? null
         }
       };
@@ -580,8 +623,8 @@ const appInstance = {
       const strokeOffset = 440 - (440 * avgScore) / 100;
       document.getElementById('report-score-ring').style.strokeDashoffset = strokeOffset;
 
-      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', jacks: '30-Sec Jumping Jacks', balance: 'Balance Master', reaction: 'Reaction Time' };
-      const rowUnit = { darts: 'pts', plank: 'sec', jacks: 'reps', balance: 'sec', reaction: 'ms' };
+      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: '30-Sec Push-ups', balance: 'Balance Master', reaction: 'Reaction Time' };
+      const rowUnit = { darts: 'pts', plank: 'sec', pushups: 'reps', balance: 'sec', reaction: 'ms' };
       const tbody = document.getElementById('report-table-body');
       tbody.innerHTML = keys.map(k => {
         const r = res[k];
@@ -603,7 +646,7 @@ const appInstance = {
       const ctx = canvas.getContext('2d');
       const width = canvas.width, height = canvas.height;
       const center = width / 2, radius = center - 40;
-      const labels = ['Darts', 'Plank', 'Jacks', 'Balance', 'Reaction'];
+      const labels = ['Darts', 'Plank', 'Push-ups', 'Balance', 'Reaction'];
       const numAxes = labels.length;
       ctx.clearRect(0, 0, width, height);
       const levels = 4;
@@ -650,7 +693,7 @@ const appInstance = {
       tbody.innerHTML = list.map((p, index) => {
         const nameParts = (p.name || 'Anonymous').split(' ');
         const anonName = nameParts[0] + (nameParts[1] ? ` ${nameParts[1][0]}.` : '');
-        const top = p.scores?.darts >= 80 ? '🎯 Darts' : p.scores?.plank >= 80 ? '🧘 Plank' : p.scores?.jacks >= 80 ? '⏱️ Jacks' : p.scores?.balance >= 80 ? '⚖️ Balance' : '🎾 Reaction';
+        const top = p.scores?.darts >= 80 ? '🎯 Darts' : p.scores?.plank >= 80 ? '🧘 Plank' : p.scores?.pushups >= 80 ? '💪 Push-ups' : p.scores?.balance >= 80 ? '⚖️ Balance' : '🎾 Reaction';
         return `<tr><td><strong>#${index + 1}</strong></td><td>${anonName}</td><td>${p.age}</td><td><strong style="color: var(--cyan);">${p.overallScore}</strong> / 100</td><td>${top}</td></tr>`;
       }).join('');
     }
@@ -659,14 +702,14 @@ const appInstance = {
   organizer: {
     loadForm() {
       document.getElementById('cfg-dart-throws').value = window.app.config.dartThrows;
-      document.getElementById('cfg-jack-timer').value = window.app.config.jackDuration;
+      document.getElementById('cfg-pushup-timer').value = window.app.config.pushupDuration;
       document.getElementById('cfg-plank-cap').value = window.app.config.plankCap;
       document.getElementById('cfg-reaction-trials').value = window.app.config.reactionTrials;
     },
     saveSettings(e) {
       e.preventDefault();
       window.app.config.dartThrows = parseInt(document.getElementById('cfg-dart-throws').value);
-      window.app.config.jackDuration = parseInt(document.getElementById('cfg-jack-timer').value);
+      window.app.config.pushupDuration = parseInt(document.getElementById('cfg-pushup-timer').value);
       window.app.config.plankCap = parseInt(document.getElementById('cfg-plank-cap').value);
       window.app.config.reactionTrials = parseInt(document.getElementById('cfg-reaction-trials').value);
       localStorage.setItem('fit5_config', JSON.stringify(window.app.config));
