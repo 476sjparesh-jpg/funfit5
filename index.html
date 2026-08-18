@@ -27,7 +27,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
 body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; overflow-x: hidden; }
 header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-glow); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-.brand-logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; color: var(--text-main); cursor: pointer; user-select: none; }
+.brand-logo { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; color: var(--text-main); cursor: pointer; }
 .brand-logo span { color: var(--cyan); }
 .nav-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 .btn { background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-glow); padding: 0.6rem 1.2rem; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; min-height: 44px; font-size: 0.9rem; }
@@ -64,7 +64,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 .counter-btn:hover { background: var(--cyan); color: #000; box-shadow: var(--glow-cyan); }
 .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 1rem; }
 .modal-overlay.active { display: flex; }
-.modal-box { background: var(--bg-card); border: 2px solid var(--cyan); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; box-shadow: var(--glow-cyan); position: relative; max-height: 90vh; overflow-y: auto; }
+.modal-box { background: var(--bg-card); border: 2px solid var(--cyan); border-radius: var(--radius-lg); padding: 2.5rem; max-width: 500px; width: 90%; text-align: center; box-shadow: var(--glow-cyan); position: relative; }
 .badge-category { display: inline-block; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 800; font-size: 0.9rem; margin-top: 1rem; text-transform: uppercase; }
 .badge-excellent { background: rgba(34, 197, 94, 0.2); color: var(--green); border: 1px solid var(--green); }
 .badge-vgood { background: rgba(0, 229, 255, 0.2); color: var(--cyan); border: 1px solid var(--cyan); }
@@ -84,6 +84,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 .data-table th { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; }
 .sync-pill { font-size: 0.7rem; background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.3); padding: 0.25rem 0.6rem; border-radius: 20px; display: inline-flex; align-items: center; gap: 0.4rem; }
 .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: blink 1.4s infinite; }
+.version-tag { background: var(--bg-card-hover); color: var(--cyan); font-size: 0.75rem; padding: 3px 10px; border-radius: 12px; border: 1px solid var(--border-glow); font-weight: 600; display: inline-block; margin-top: 6px; }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
 .error-text { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; }
@@ -105,10 +106,11 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 </head>
 <body>
 <header>
-  <div class="brand-logo" id="main-brand-logo" onclick="window.app.handlers.handleLogoClick()">⚡ FIT<span>5</span></div>
+  <div class="brand-logo" onclick="window.app.router.navigate('hero-view')">⚡ FIT<span>5</span></div>
   <div class="nav-actions">
     <button class="btn" onclick="window.app.participantLogin.openModal()">📱 Participant Login</button>
     <button class="btn" onclick="window.app.router.navigate('leaderboard-view')">🏆 Leaderboard</button>
+    <button class="btn" id="admin-nav-btn" onclick="window.app.admin.openModal()">🔒 Admin Login</button>
   </div>
 </header>
 
@@ -116,8 +118,8 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 
   <section id="hero-view" class="view-section active">
     <div class="hero">
-      <h1>Interactive Fitness Challenge</h1>
-      <p>Move. Challenge. Measure. Complete five fun indoor challenges and discover your personal fitness profile.Standardized 5-station fitness evaluation platform delivering real-time metric analytics, performance categorization, and a live cross-device leaderboard.</p>
+      <h1>Interactive Fitness Exhibition Platform</h1>
+      <p>Standardized 5-station fitness evaluation platform delivering real-time metric analytics, performance categorization, and a live cross-device leaderboard.</p>
       <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;" onclick="window.app.router.navigate('registration-view')">Begin Assessment 🚀</button>
     </div>
     <div class="grid-5" style="margin-top: 2rem;">
@@ -125,7 +127,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🧘</div><h3>Core Plank</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Core endurance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div><h3>Push-ups</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Upper body endurance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">⚖️</div><h3>Balance Master</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Single-leg balance</p></div>
-      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎾</div><h3>Reaction Catch</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Drop reaction time</p></div>
+      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎾</div><h3>Reaction Catch</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Drop reaction distance</p></div>
     </div>
   </section>
 
@@ -224,60 +226,27 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
   </section>
 
   <section id="organizer-view" class="view-section">
-    <div class="card" style="max-width: 1000px; margin: 0 auto;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
-        <h2>🛡️ Master Admin Control Panel</h2>
-        <button class="btn btn-danger" onclick="window.app.admin.logout()">Log Out Admin</button>
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+        <h2>Exhibition Settings & Controls</h2>
+        <button class="btn btn-danger" onclick="window.app.admin.logout()">Log Out</button>
       </div>
-
-      <!-- Admin Tabs Navigation -->
-      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glow); padding-bottom: 0.5rem;">
-        <button class="btn btn-filter-active" id="admin-tab-regs" onclick="window.app.adminDashboard.switchTab('registrations')">📋 Registrations & Data</button>
-        <button class="btn" id="admin-tab-settings" onclick="window.app.adminDashboard.switchTab('settings')">⚙️ Exhibition Parameters</button>
-      </div>
-
-      <!-- Tab 1: Registrations Management -->
-      <div id="admin-view-registrations">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-          <input type="text" id="admin-search-input" class="form-control" style="max-width: 300px;" placeholder="🔍 Search participant name/phone..." oninput="window.app.adminDashboard.renderRegistrations()">
-          <div style="display: flex; gap: 0.5rem;">
-            <button class="btn" onclick="window.app.storage.exportCSV()">📥 Export CSV</button>
-            <button class="btn btn-danger" onclick="window.app.storage.clearAllData()">⚠️ Clear Database</button>
-          </div>
+      <form id="settings-form" onsubmit="window.app.organizer.saveSettings(event)">
+        <div class="grid-2">
+          <div class="form-group"><label for="cfg-dart-throws">Dart Throws Target Count</label><input type="number" id="cfg-dart-throws" class="form-control" value="3" min="1" max="10"></div>
+          <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="180" min="30" max="600"></div>
         </div>
-        <div style="overflow-x: auto;">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>BMI</th>
-                <th>Overall</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="admin-registrations-tbody"></tbody>
-          </table>
+        <div class="grid-2">
+          <div class="form-group"><label for="cfg-reaction-trials">Reaction Max Distance (cm)</label><input type="number" id="cfg-reaction-trials" class="form-control" value="15" min="5" max="50"></div>
         </div>
+        <button type="submit" class="btn btn-primary" style="margin-bottom: 2rem;">Save Exhibition Parameters</button>
+      </form>
+      <hr style="border-color: var(--bg-card-hover); margin-bottom: 2rem;">
+      <h3>Data Management</h3>
+      <div style="display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+        <button class="btn" onclick="window.app.storage.exportCSV()">📥 Export Data (CSV)</button>
+        <button class="btn btn-danger" onclick="window.app.storage.clearAllData()">⚠️ Clear All Cloud Records</button>
       </div>
-
-      <!-- Tab 2: Exhibition Parameters -->
-      <div id="admin-view-settings" style="display: none;">
-        <form id="settings-form" onsubmit="window.app.organizer.saveSettings(event)">
-          <div class="grid-2">
-            <div class="form-group"><label for="cfg-dart-throws">Dart Throws Target Count</label><input type="number" id="cfg-dart-throws" class="form-control" value="3" min="1" max="10"></div>
-            <div class="form-group"><label for="cfg-pushup-timer">Push-ups Duration (Seconds)</label><input type="number" id="cfg-pushup-timer" class="form-control" value="30" min="10" max="60"></div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="180" min="30" max="600"></div>
-            <div class="form-group"><label for="cfg-reaction-trials">Reaction Test Drop Count</label><input type="number" id="cfg-reaction-trials" class="form-control" value="3" min="1" max="10"></div>
-          </div>
-          <button type="submit" class="btn btn-primary">Save Exhibition Parameters</button>
-        </form>
-      </div>
-
     </div>
   </section>
 
@@ -312,7 +281,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 <div id="admin-modal" class="modal-overlay">
   <div class="modal-box" style="text-align:left;">
     <button class="modal-close" onclick="window.app.admin.closeModal()">✕</button>
-    <h3 style="margin-bottom:1rem;">🛡 Master Organizer Authentication</h3>
+    <h3 style="margin-bottom:1rem;">🛡 Organizer Authentication</h3>
     <form onsubmit="window.app.admin.login(event)">
       <div class="form-group"><label for="admin-email">Admin Email</label><input type="email" id="admin-email" class="form-control" required></div>
       <div class="form-group"><label for="admin-pass">Password</label><input type="password" id="admin-pass" class="form-control" required></div>
@@ -322,53 +291,15 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
   </div>
 </div>
 
-<!-- Edit Participant Record Modal -->
-<div id="admin-edit-modal" class="modal-overlay">
-  <div class="modal-box" style="text-align:left; max-width:600px;">
-    <button class="modal-close" onclick="window.app.adminDashboard.closeEditModal()">✕</button>
-    <h3 style="margin-bottom:1rem; text-align:center;">✏️ Edit Participant Details</h3>
-    <form id="admin-edit-form" onsubmit="window.app.adminDashboard.saveParticipantEdit(event)">
-      <input type="hidden" id="edit-p-id">
-      <div class="grid-2">
-        <div class="form-group"><label>Full Name</label><input type="text" id="edit-p-name" class="form-control" required></div>
-        <div class="form-group"><label>Phone Number</label><input type="tel" id="edit-p-phone" class="form-control" required pattern="[0-9]{10}"></div>
-      </div>
-      <div class="grid-2">
-        <div class="form-group"><label>Age</label><input type="number" id="edit-p-age" class="form-control" required min="10" max="80"></div>
-        <div class="form-group"><label>Gender</label>
-          <select id="edit-p-gender" class="form-control" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="grid-2">
-        <div class="form-group"><label>Height (cm)</label><input type="number" id="edit-p-height" class="form-control" required min="100" max="230"></div>
-        <div class="form-group"><label>Weight (kg)</label><input type="number" id="edit-p-weight" class="form-control" required min="30" max="200"></div>
-      </div>
-      <hr style="border-color: var(--bg-card-hover); margin: 1rem 0;">
-      <h4 style="margin-bottom: 0.8rem; color: var(--cyan);">Raw Metric Scores</h4>
-      <div class="grid-2">
-        <div class="form-group"><label>Darts Total Points</label><input type="number" id="edit-p-darts" class="form-control" min="0"></div>
-        <div class="form-group"><label>Plank Duration (Sec)</label><input type="number" id="edit-p-plank" class="form-control" min="0"></div>
-      </div>
-      <div class="grid-2">
-        <div class="form-group"><label>Push-ups Reps</label><input type="number" id="edit-p-pushups" class="form-control" min="0"></div>
-        <div class="form-group"><label>Balance Hold (Sec)</label><input type="number" step="0.1" id="edit-p-balance" class="form-control" min="0"></div>
-      </div>
-      <div class="form-group"><label>Reaction Drop Distance (cm)</label><input type="number" id="edit-p-reaction" class="form-control" min="1" max="100"></div>
-
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">Save & Update Record</button>
-    </form>
-  </div>
-</div>
-
-<footer style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 1.5rem; border-top: 1px solid var(--border-glow);">FIT5 Exhibition Assessment Platform</footer>
+<footer style="text-align:center; color: var(--text-muted); font-size: 0.85rem; padding: 2rem 1.5rem; border-top: 1px solid var(--border-glow); display: flex; flex-direction: column; align-items: center; gap: 6px;">
+  <div>FIT5 Exhibition Assessment Platform &copy; 2026</div>
+  <div><span class="version-tag">v1.1.0 (Initial Release & Scoring Fixed)</span></div>
+  <div style="font-size: 0.78rem; color: #64748b; margin-top: 2px;">More updates and features coming soon to enhance and improve the experience!</div>
+</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, deleteDoc, doc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -389,16 +320,13 @@ const assessmentsCol = collection(db, "assessments");
 const stationMeta = {
   darts: { label: 'Dart Precision', name: 'Darts', emoji: '🎯' },
   plank: { label: 'Core Plank Hold', name: 'Plank', emoji: '🧘' },
-  pushups: { label: '30-Sec Push-ups', name: 'Push-ups', emoji: '💪' },
+  pushups: { label: 'Push-ups Counter', name: 'Push-ups', emoji: '💪' },
   balance: { label: 'Balance Master', name: 'Balance', emoji: '⚖️' },
   reaction: { label: 'Reaction Time', name: 'Reaction', emoji: '🎾' }
 };
 
-let logoClickCount = 0;
-let logoClickTimer = null;
-
 const appInstance = {
-  config: { dartThrows: 3, pushupDuration: 30, plankCap: 180, reactionTrials: 3, gravity: 9.81 },
+  config: { dartThrows: 3, plankCap: 180, reactionTrials: 15, gravity: 9.81 },
   state: {
     currentView: 'hero-view', currentParticipant: null, currentStationIndex: 0,
     stationResults: {}, activeTimer: null, timerSeconds: 0, participantsHistory: [], isAdmin: false
@@ -414,10 +342,7 @@ const appInstance = {
       const target = document.getElementById(viewId);
       if (target) { target.classList.add('active'); window.app.state.currentView = viewId; }
       if (viewId === 'leaderboard-view') window.app.leaderboard.render();
-      if (viewId === 'organizer-view') {
-        window.app.organizer.loadForm();
-        window.app.adminDashboard.renderRegistrations();
-      }
+      if (viewId === 'organizer-view') window.app.organizer.loadForm();
     }
   },
 
@@ -452,7 +377,7 @@ const appInstance = {
         plank: { raw: record.rawMetrics?.plank ?? record.scores.plank, score: record.scores.plank, category: window.app.scoring.getCategory(record.scores.plank) },
         pushups: { raw: record.rawMetrics?.pushups ?? record.scores.pushups, score: record.scores.pushups, category: window.app.scoring.getCategory(record.scores.pushups) },
         balance: { raw: record.rawMetrics?.balance ?? record.scores.balance, score: record.scores.balance, category: window.app.scoring.getCategory(record.scores.balance) },
-        reaction: { raw: record.rawMetrics?.reaction ?? record.scores.reactionMS, score: record.scores.reaction, category: window.app.scoring.getCategory(record.scores.reaction) }
+        reaction: { raw: record.rawMetrics?.reaction ?? record.scores.reactionCM, score: record.scores.reaction, category: window.app.scoring.getCategory(record.scores.reaction) }
       };
 
       this.closeModal();
@@ -485,136 +410,17 @@ const appInstance = {
     }
   },
 
-  adminDashboard: {
-    switchTab(tab) {
-      document.getElementById('admin-tab-regs').classList.toggle('btn-filter-active', tab === 'registrations');
-      document.getElementById('admin-tab-settings').classList.toggle('btn-filter-active', tab === 'settings');
-      document.getElementById('admin-view-registrations').style.display = tab === 'registrations' ? 'block' : 'none';
-      document.getElementById('admin-view-settings').style.display = tab === 'settings' ? 'block' : 'none';
-    },
-    renderRegistrations() {
-      const tbody = document.getElementById('admin-registrations-tbody');
-      const queryStr = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
-      let list = [...window.app.state.participantsHistory];
-
-      if (queryStr) {
-        list = list.filter(p => (p.name || '').toLowerCase().includes(queryStr) || (p.phone || '').includes(queryStr));
-      }
-
-      if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No registration records found.</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = list.map(p => `
-        <tr>
-          <td><strong>${p.name}</strong></td>
-          <td>${p.phone || 'N/A'}</td>
-          <td>${p.age}</td>
-          <td>${p.gender}</td>
-          <td>${p.bmi}</td>
-          <td><strong style="color:var(--cyan);">${p.overallScore}</strong> / 100</td>
-          <td>
-            <div style="display:flex; gap:0.4rem;">
-              <button class="btn btn-ghost" style="padding:0.3rem 0.6rem; min-height:auto; font-size:0.8rem;" onclick="window.app.adminDashboard.openEditModal('${p.id}')">✏️ Edit</button>
-              <button class="btn btn-danger" style="padding:0.3rem 0.6rem; min-height:auto; font-size:0.8rem;" onclick="window.app.adminDashboard.deleteRecord('${p.id}')">🗑️ Delete</button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    },
-    async deleteRecord(id) {
-      if (!confirm("Are you sure you want to delete this participant record?")) return;
-      try {
-        await deleteDoc(doc(db, "assessments", id));
-        alert("Record deleted successfully.");
-      } catch (err) {
-        console.error("Delete error:", err);
-        alert("Failed to delete record.");
-      }
-    },
-    openEditModal(id) {
-      const record = window.app.state.participantsHistory.find(p => p.id === id);
-      if (!record) return;
-
-      document.getElementById('edit-p-id').value = record.id;
-      document.getElementById('edit-p-name').value = record.name || '';
-      document.getElementById('edit-p-phone').value = record.phone || '';
-      document.getElementById('edit-p-age').value = record.age || '';
-      document.getElementById('edit-p-gender').value = record.gender || 'Male';
-      document.getElementById('edit-p-height').value = record.height || '';
-      document.getElementById('edit-p-weight').value = record.weight || '';
-
-      document.getElementById('edit-p-darts').value = record.rawMetrics?.darts ?? record.scores?.darts ?? 0;
-      document.getElementById('edit-p-plank').value = record.rawMetrics?.plank ?? record.scores?.plank ?? 0;
-      document.getElementById('edit-p-pushups').value = record.rawMetrics?.pushups ?? record.scores?.pushups ?? 0;
-      document.getElementById('edit-p-balance').value = record.rawMetrics?.balance ?? record.scores?.balance ?? 0;
-      document.getElementById('edit-p-reaction').value = record.rawMetrics?.reaction ?? 20;
-
-      document.getElementById('admin-edit-modal').classList.add('active');
-    },
-    closeEditModal() {
-      document.getElementById('admin-edit-modal').classList.remove('active');
-    },
-    async saveParticipantEdit(e) {
-      e.preventDefault();
-      const id = document.getElementById('edit-p-id').value;
-      const h = parseFloat(document.getElementById('edit-p-height').value) / 100;
-      const w = parseFloat(document.getElementById('edit-p-weight').value);
-      const bmi = h > 0 && w > 0 ? (w / (h * h)).toFixed(1) : 0;
-
-      const dartsRaw = parseInt(document.getElementById('edit-p-darts').value) || 0;
-      const plankRaw = parseFloat(document.getElementById('edit-p-plank').value) || 0;
-      const pushupsRaw = parseInt(document.getElementById('edit-p-pushups').value) || 0;
-      const balanceRaw = parseFloat(document.getElementById('edit-p-balance').value) || 0;
-      const reactionRaw = parseFloat(document.getElementById('edit-p-reaction').value) || 20;
-
-      const dartsScore = window.app.scoring.normalize('darts', dartsRaw);
-      const plankScore = window.app.scoring.normalize('plank', plankRaw);
-      const pushupsScore = window.app.scoring.normalize('pushups', pushupsRaw);
-      const balanceScore = window.app.scoring.normalize('balance', balanceRaw);
-
-      const distMeters = reactionRaw / 100;
-      const timeSec = Math.sqrt((2 * distMeters) / window.app.config.gravity);
-      const reactionMS = Math.round(timeSec * 1000);
-      const reactionScore = window.app.scoring.normalize('reaction', reactionMS);
-
-      const overallScore = Math.round((dartsScore + plankScore + pushupsScore + balanceScore + reactionScore) / 5);
-
-      const updatedData = {
-        name: document.getElementById('edit-p-name').value,
-        phone: document.getElementById('edit-p-phone').value,
-        age: parseInt(document.getElementById('edit-p-age').value),
-        gender: document.getElementById('edit-p-gender').value,
-        height: h * 100,
-        weight: w,
-        bmi,
-        overallScore,
-        rawMetrics: { darts: dartsRaw, plank: plankRaw, pushups: pushupsRaw, balance: balanceRaw, reaction: reactionRaw },
-        scores: { darts: dartsScore, plank: plankScore, pushups: pushupsScore, balance: balanceScore, reaction: reactionScore, reactionMS }
-      };
-
-      try {
-        await updateDoc(doc(db, "assessments", id), updatedData);
-        alert("Participant updated successfully!");
-        this.closeEditModal();
-      } catch (err) {
-        console.error("Update error:", err);
-        alert("Failed to update participant.");
-      }
-    }
-  },
-
   storage: {
     init() {
       onAuthStateChanged(auth, (user) => {
         window.app.state.isAdmin = !!user;
+        const btn = document.getElementById('admin-nav-btn');
+        btn.textContent = user ? '⚙️ Organizer Mode' : '🔒 Admin Login';
       });
       const q = query(assessmentsCol, orderBy("overallScore", "desc"), limit(100));
       onSnapshot(q, (snapshot) => {
         window.app.state.participantsHistory = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         if (window.app.state.currentView === 'leaderboard-view') window.app.leaderboard.render();
-        if (window.app.state.currentView === 'organizer-view') window.app.adminDashboard.renderRegistrations();
       }, (err) => console.error("Firestore sync error:", err));
     },
     async saveRecord(record) {
@@ -624,9 +430,9 @@ const appInstance = {
     exportCSV() {
       const list = window.app.state.participantsHistory;
       if (list.length === 0) { alert("No records available to export."); return; }
-      let csv = "ID,Name,Phone,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionMS\n";
+      let csv = "ID,Name,Phone,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionCM\n";
       list.forEach(p => {
-        csv += `"${p.id}","${p.name}","${p.phone || ''}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionMS}\n`;
+        csv += `"${p.id}","${p.name}","${p.phone || ''}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionCM ?? ''}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
@@ -642,19 +448,6 @@ const appInstance = {
   },
 
   handlers: {
-    handleLogoClick() {
-      logoClickCount++;
-      clearTimeout(logoClickTimer);
-      if (logoClickCount >= 5) {
-        logoClickCount = 0;
-        window.app.admin.openModal();
-      } else {
-        logoClickTimer = setTimeout(() => {
-          if (logoClickCount < 5) window.app.router.navigate('hero-view');
-          logoClickCount = 0;
-        }, 400);
-      }
-    },
     updateBMI() {
       const h = parseFloat(document.getElementById('reg-height').value) / 100;
       const w = parseFloat(document.getElementById('reg-weight').value);
@@ -692,7 +485,7 @@ const appInstance = {
     stations: [
       { id: 'darts', title: '🎯 Station 1: Dart Precision' },
       { id: 'plank', title: '🧘 Station 2: Core Plank Hold' },
-      { id: 'pushups', title: '💪 Station 3: 30-Sec Push-ups' },
+      { id: 'pushups', title: '💪 Station 3: Push-ups Counter' },
       { id: 'balance', title: '⚖️ Station 4: Static Balance Master' },
       { id: 'reaction', title: '🎾 Station 5: Reaction Catch' }
     ],
@@ -717,14 +510,14 @@ const appInstance = {
       let html = `<h2 style="margin-bottom: 0.5rem; text-align: center;">${station.title}</h2>`;
       
       if (station.id === 'darts') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the standard target. Log the combined total score.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the target. Enter total combined score achieved.</p>
           <div class="form-group" style="max-width: 320px; margin: 0 auto;">
             <label for="dart-input-score">Total Combined Score</label>
             <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 60}" value="0">
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('darts')">Submit Score</button>`;
       } else if (station.id === 'plank') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Maintain proper forearm plank posture. Time ends on form break.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Maintain forearm plank position. Stop timer on form break.</p>
           <div class="timer-display" id="plank-timer-disp">00:00</div>
           <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
             <button class="btn btn-primary" onclick="window.app.testing.startStopwatch()">Start Timer</button>
@@ -736,23 +529,19 @@ const appInstance = {
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('plank')">Submit Score</button>`;
       } else if (station.id === 'pushups') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 0.5rem;">Perform max completed push-ups in ${window.app.config.pushupDuration} seconds.</p>
-          <div class="timer-display" id="pushup-timer-disp">${window.app.config.pushupDuration}s</div>
-          <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-            <button class="btn btn-primary" onclick="window.app.testing.startCountdown(${window.app.config.pushupDuration})">Start 30s Timer</button>
-          </div>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Log total completed push-ups performed by participant.</p>
           <div class="counter-box">
             <button class="counter-btn" onclick="window.app.testing.adjustPushups(-1)">-</button>
-            <div style="font-size: 2.2rem; font-weight: 800; min-width: 60px; text-align: center;" id="pushup-counter-disp">0</div>
+            <div style="font-size: 2.5rem; font-weight: 800; min-width: 80px; text-align: center;" id="pushup-counter-disp">0</div>
             <button class="counter-btn" onclick="window.app.testing.adjustPushups(1)">+</button>
           </div>
-          <div class="form-group" style="max-width: 320px; margin: 1rem auto 0 auto;">
-            <label for="pushup-count-input">Total Completed Push-ups</label>
+          <div class="form-group" style="max-width: 320px; margin: 1.5rem auto 0 auto;">
+            <label for="pushup-count-input">Total Completed Push-ups (Reps)</label>
             <input type="number" id="pushup-count-input" class="form-control" value="0" min="0" oninput="document.getElementById('pushup-counter-disp').textContent = this.value">
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('pushups')">Submit Score</button>`;
       } else if (station.id === 'balance') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Single-leg balance with eyes closed. Timer stops when foot touches ground.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1rem;">Single-leg balance. Timer stops when non-supporting foot touches down.</p>
           <div class="timer-display" id="balance-timer-disp">0.0s</div>
           <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem;">
             <button class="btn btn-primary" onclick="window.app.testing.startPrecisionTimer()">Start Timer</button>
@@ -764,10 +553,10 @@ const appInstance = {
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('balance')">Submit Score</button>`;
       } else if (station.id === 'reaction') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Catch dropped ruler. Record drop distance in cm to convert to reaction time.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Catch dropped ruler test. Lower distance is better (1 cm = 100 pts, max 15 cm = 0 pts).</p>
           <div class="form-group" style="max-width: 320px; margin: 0 auto;">
             <label for="reaction-dist-input">Recorded Drop Distance (cm)</label>
-            <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15" min="1" max="100">
+            <input type="number" id="reaction-dist-input" class="form-control" placeholder="1 to 15" min="1" max="15" step="0.1" value="1">
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Submit Score</button>`;
       }
@@ -797,16 +586,6 @@ const appInstance = {
     stopStopwatch() {
       clearInterval(window.app.state.activeTimer);
     },
-    startCountdown(seconds) {
-      clearInterval(window.app.state.activeTimer);
-      let left = seconds;
-      window.app.state.activeTimer = setInterval(() => {
-        left--;
-        const disp = document.getElementById('pushup-timer-disp');
-        if (disp) disp.textContent = `${left}s`;
-        if (left <= 0) { clearInterval(window.app.state.activeTimer); alert("Time's Up! Check your total completed push-ups."); }
-      }, 1000);
-    },
     startPrecisionTimer() {
       clearInterval(window.app.state.activeTimer);
       let startTime = Date.now();
@@ -828,19 +607,15 @@ const appInstance = {
       else if (type === 'plank') rawVal = parseFloat(document.getElementById('plank-input-score').value) || 0;
       else if (type === 'pushups') rawVal = parseInt(document.getElementById('pushup-count-input').value) || 0;
       else if (type === 'balance') rawVal = parseFloat(document.getElementById('balance-input-score').value) || 0;
-      else if (type === 'reaction') {
-        const distCM = parseFloat(document.getElementById('reaction-dist-input').value) || 30;
-        const distMeters = distCM / 100;
-        const timeSec = Math.sqrt((2 * distMeters) / window.app.config.gravity);
-        rawVal = Math.round(timeSec * 1000);
-      }
+      else if (type === 'reaction') rawVal = parseFloat(document.getElementById('reaction-dist-input').value) || 1;
+
       const normalizedScore = window.app.scoring.normalize(type, rawVal);
       const category = window.app.scoring.getCategory(normalizedScore);
       window.app.state.stationResults[type] = { raw: rawVal, score: normalizedScore, category, skipped: false };
       document.getElementById('modal-station-title').textContent = this.stations[window.app.state.currentStationIndex].title.replace(/^\S+\s/, '');
       document.getElementById('modal-score-val').textContent = normalizedScore + ' / 100';
       document.getElementById('modal-badge-container').innerHTML = `<span class="badge-category badge-${category.css}">${category.label}</span>`;
-      document.getElementById('modal-feedback').textContent = `Raw Performance Metric Logged: ${rawVal}`;
+      document.getElementById('modal-feedback').textContent = `Raw Performance Metric Logged: ${rawVal} ${type === 'reaction' ? 'cm' : type === 'pushups' ? 'reps' : type === 'darts' ? 'pts' : 'sec'}`;
       document.getElementById('result-modal').classList.add('active');
     },
     skipStation() {
@@ -863,11 +638,23 @@ const appInstance = {
   scoring: {
     normalize(type, raw) {
       let score = 0;
-      if (type === 'darts') score = (raw / (window.app.config.dartThrows * 50)) * 100;
-      else if (type === 'plank') score = (raw / window.app.config.plankCap) * 100;
-      else if (type === 'pushups') score = (raw / 40) * 100;
-      else if (type === 'balance') score = (raw / 60) * 100;
-      else if (type === 'reaction') score = ((400 - raw) / (400 - 100)) * 100;
+      const val = parseFloat(raw) || 0;
+
+      if (type === 'darts') {
+        score = (val / (window.app.config.dartThrows * 50)) * 100;
+      } else if (type === 'plank') {
+        score = (val / window.app.config.plankCap) * 100;
+      } else if (type === 'pushups') {
+        // Pushups Counter Normalization: 50 reps = 100 pts
+        score = (val / 50) * 100;
+      } else if (type === 'balance') {
+        score = (val / 60) * 100;
+      } else if (type === 'reaction') {
+        // Reaction Drop Distance Normalization: 1cm = 100pts, 15cm = 0pts
+        if (val <= 1) score = 100;
+        else if (val >= 15) score = 0;
+        else score = 100 * (1 - (val - 1) / 14);
+      }
       return Math.min(100, Math.max(0, Math.round(score)));
     },
     getCategory(score) {
@@ -894,7 +681,7 @@ const appInstance = {
         },
         scores: {
           darts: res.darts?.score || 0, plank: res.plank?.score || 0, pushups: res.pushups?.score || 0,
-          balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionMS: res.reaction?.raw ?? null
+          balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionCM: res.reaction?.raw ?? null
         }
       };
       window.app.storage.saveRecord(fullRecord);
@@ -910,8 +697,8 @@ const appInstance = {
       const strokeOffset = 440 - (440 * record.overallScore) / 100;
       document.getElementById('report-score-ring').style.strokeDashoffset = strokeOffset;
 
-      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: '30-Sec Push-ups', balance: 'Balance Master', reaction: 'Reaction Time' };
-      const rowUnit = { darts: 'pts', plank: 'sec', pushups: 'reps', balance: 'sec', reaction: 'ms' };
+      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: 'Push-ups Counter', balance: 'Balance Master', reaction: 'Reaction Time' };
+      const rowUnit = { darts: 'pts', plank: 'sec', pushups: 'reps', balance: 'sec', reaction: 'cm' };
       const tbody = document.getElementById('report-table-body');
       tbody.innerHTML = keys.map(k => {
         const r = res[k];
@@ -1043,14 +830,12 @@ const appInstance = {
   organizer: {
     loadForm() {
       document.getElementById('cfg-dart-throws').value = window.app.config.dartThrows;
-      document.getElementById('cfg-pushup-timer').value = window.app.config.pushupDuration;
       document.getElementById('cfg-plank-cap').value = window.app.config.plankCap;
       document.getElementById('cfg-reaction-trials').value = window.app.config.reactionTrials;
     },
     saveSettings(e) {
       e.preventDefault();
       window.app.config.dartThrows = parseInt(document.getElementById('cfg-dart-throws').value);
-      window.app.config.pushupDuration = parseInt(document.getElementById('cfg-pushup-timer').value);
       window.app.config.plankCap = parseInt(document.getElementById('cfg-plank-cap').value);
       window.app.config.reactionTrials = parseInt(document.getElementById('cfg-reaction-trials').value);
       localStorage.setItem('fit5_config', JSON.stringify(window.app.config));
@@ -1060,13 +845,6 @@ const appInstance = {
 };
 
 window.app = appInstance;
-
-window.addEventListener('keydown', (e) => {
-  if (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-    e.preventDefault();
-    window.app.admin.openModal();
-  }
-});
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedConfig = localStorage.getItem('fit5_config');
