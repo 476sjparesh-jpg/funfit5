@@ -117,7 +117,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
   <section id="hero-view" class="view-section active">
     <div class="hero">
       <h1>Interactive Fitness Challenge</h1>
-      <p>Move. Challenge. Measure. Complete five fun indoor challenges and discover your personal fitness profile.Standardized 5-station fitness evaluation platform delivering real-time metric analytics, performance categorization, and a live cross-device leaderboard.</p>
+      <p>Move. Challenge. Measure. Complete five fun indoor challenges and discover your personal fitness profile. Standardized 5-station fitness evaluation platform delivering real-time metric analytics, performance categorization, and a live cross-device leaderboard.</p>
       <button class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;" onclick="window.app.router.navigate('registration-view')">Begin Assessment 🚀</button>
     </div>
     <div class="grid-5" style="margin-top: 2rem;">
@@ -230,13 +230,11 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
         <button class="btn btn-danger" onclick="window.app.admin.logout()">Log Out Admin</button>
       </div>
 
-      <!-- Admin Tabs Navigation -->
       <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glow); padding-bottom: 0.5rem;">
         <button class="btn btn-filter-active" id="admin-tab-regs" onclick="window.app.adminDashboard.switchTab('registrations')">📋 Registrations & Data</button>
         <button class="btn" id="admin-tab-settings" onclick="window.app.adminDashboard.switchTab('settings')">⚙️ Exhibition Parameters</button>
       </div>
 
-      <!-- Tab 1: Registrations Management -->
       <div id="admin-view-registrations">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
           <input type="text" id="admin-search-input" class="form-control" style="max-width: 300px;" placeholder="🔍 Search participant name/phone..." oninput="window.app.adminDashboard.renderRegistrations()">
@@ -263,16 +261,15 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
         </div>
       </div>
 
-      <!-- Tab 2: Exhibition Parameters -->
       <div id="admin-view-settings" style="display: none;">
         <form id="settings-form" onsubmit="window.app.organizer.saveSettings(event)">
           <div class="grid-2">
-            <div class="form-group"><label for="cfg-dart-throws">Dart Throws Target Count</label><input type="number" id="cfg-dart-throws" class="form-control" value="3" min="1" max="10"></div>
+            <div class="form-group"><label for="cfg-dart-throws">Dart Throws Target Count</label><input type="number" id="cfg-dart-throws" class="form-control" value="4" min="1" max="10"></div>
             <div class="form-group"><label for="cfg-pushup-timer">Push-ups Duration (Seconds)</label><input type="number" id="cfg-pushup-timer" class="form-control" value="30" min="10" max="60"></div>
           </div>
           <div class="grid-2">
-            <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="180" min="30" max="600"></div>
-            <div class="form-group"><label for="cfg-reaction-trials">Reaction Test Drop Count</label><input type="number" id="cfg-reaction-trials" class="form-control" value="3" min="1" max="10"></div>
+            <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="120" min="30" max="600"></div>
+            <div class="form-group"><label for="cfg-reaction-trials">Reaction Test Drop Count</label><input type="number" id="cfg-reaction-trials" class="form-control" value="1" min="1" max="10"></div>
           </div>
           <button type="submit" class="btn btn-primary">Save Exhibition Parameters</button>
         </form>
@@ -322,7 +319,6 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
   </div>
 </div>
 
-<!-- Edit Participant Record Modal -->
 <div id="admin-edit-modal" class="modal-overlay">
   <div class="modal-box" style="text-align:left; max-width:600px;">
     <button class="modal-close" onclick="window.app.adminDashboard.closeEditModal()">✕</button>
@@ -398,7 +394,7 @@ let logoClickCount = 0;
 let logoClickTimer = null;
 
 const appInstance = {
-  config: { dartThrows: 3, pushupDuration: 30, plankCap: 180, reactionTrials: 3, gravity: 9.81 },
+  config: { dartThrows: 4, pushupDuration: 30, plankCap: 120, reactionTrials: 1, gravity: 9.81 },
   state: {
     currentView: 'hero-view', currentParticipant: null, currentStationIndex: 0,
     stationResults: {}, activeTimer: null, timerSeconds: 0, participantsHistory: [], isAdmin: false
@@ -720,7 +716,7 @@ const appInstance = {
         html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Throw ${window.app.config.dartThrows} darts at the standard target. Log the combined total score.</p>
           <div class="form-group" style="max-width: 320px; margin: 0 auto;">
             <label for="dart-input-score">Total Combined Score</label>
-            <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 60}" value="0">
+            <input type="number" id="dart-input-score" class="form-control" min="0" max="${window.app.config.dartThrows * 20}" value="0">
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('darts')">Submit Score</button>`;
       } else if (station.id === 'plank') {
@@ -860,44 +856,44 @@ const appInstance = {
     }
   },
 
-  const scoring = {
-  normalize(type, raw) {
-    let score = 0;
-    const config = window.app.config || {};
+  scoring: {
+    normalize(type, raw) {
+      let score = 0;
+      const config = window.app.config || {};
 
-    if (type === 'darts') {
-      // 4 tries, max 20 pts each = 80 max total score (normalized to 100%)
-      const dartThrows = config.dartThrows || 4;
-      const maxPossibleScore = dartThrows * 20; 
-      score = (raw / maxPossibleScore) * 100;
+      if (type === 'darts') {
+        // 4 tries, max 20 pts each = 80 max total score (normalized to 100%)
+        const dartThrows = config.dartThrows || 4;
+        const maxPossibleScore = dartThrows * 20; 
+        score = (raw / maxPossibleScore) * 100;
 
-    } else if (type === 'plank') {
-      const plankCap = config.plankCap || 120;
-      score = (raw / plankCap) * 100;
+      } else if (type === 'plank') {
+        const plankCap = config.plankCap || 120;
+        score = (raw / plankCap) * 100;
 
-    } else if (type === 'pushups') {
-      const pushupsDuration = config.pushupsDuration || 30;
-      score = (raw / pushupsDuration) * 100;
+      } else if (type === 'pushups') {
+        const pushupDuration = config.pushupDuration || config.pushupsDuration || 30;
+        score = (raw / pushupDuration) * 100;
 
-    } else if (type === 'balance') {
-      const balanceCap = config.balanceCap || 60;
-      score = (raw / balanceCap) * 100;
+      } else if (type === 'balance') {
+        const balanceCap = config.balanceCap || 60;
+        score = (raw / balanceCap) * 100;
 
-    } else if (type === 'reaction') {
-      // Scale reaction score from raw milliseconds (100ms best to 400ms worst)
-      score = ((400 - raw) / (400 - 100)) * 100;
+      } else if (type === 'reaction') {
+        // Scale reaction score from raw milliseconds (100ms best to 400ms worst)
+        score = ((400 - raw) / (400 - 100)) * 100;
+      }
+
+      return Math.min(100, Math.max(0, Math.round(score)));
+    },
+
+    getCategory(score) {
+      if (score >= 85) return { label: 'EXCELLENT', css: 'excellent' };
+      if (score >= 70) return { label: 'VERY GOOD', css: 'vgood' };
+      if (score >= 55) return { label: 'GOOD', css: 'good' };
+      if (score >= 40) return { label: 'AVERAGE', css: 'avg' };
+      return { label: 'NEEDS IMPROVEMENT', css: 'needs-imp' };
     }
-
-    return Math.min(100, Math.max(0, Math.round(score)));
-  },
-
-  getCategory(score) {
-    if (score >= 85) return { label: 'EXCELLENT', css: 'excellent' };
-    if (score >= 70) return { label: 'VERY GOOD', css: 'vgood' };
-    if (score >= 55) return { label: 'GOOD', css: 'good' };
-    if (score >= 40) return { label: 'AVERAGE', css: 'avg' };
-    return { label: 'NEEDS IMPROVEMENT', css: 'needs-imp' };
-  }
   },
 
   report: {
