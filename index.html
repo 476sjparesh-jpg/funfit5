@@ -255,6 +255,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
                 <th>Gender</th>
                 <th>BMI</th>
                 <th>Overall</th>
+                <th>Leaderboard</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -579,7 +580,7 @@ const appInstance = {
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);">No registration records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);">No registration records found.</td></tr>`;
         return;
       }
 
@@ -595,9 +596,15 @@ const appInstance = {
             ${p.scoreOverrides ? '<br><small style="color:var(--yellow);">✎ Admin adjusted</small>' : ''}
           </td>
           <td>
+            ${p.leaderboardVisible === false
+              ? '<span style="color:var(--red);font-weight:700;">Hidden</span>'
+              : '<span style="color:var(--green);font-weight:700;">Visible</span>'}
+          </td>
+          <td>
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-              <button class="btn btn-ghost" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.openEditModal('${p.id}')">✏️ Edit Scores</button>
-              <button class="btn btn-danger" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.deleteRecord('${p.id}')">🗑️ Delete</button>
+              <button class="btn btn-ghost" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.openEditModal('${p.id}')">✏️ Edit Registration & Scores</button>
+              <button class="btn ${p.leaderboardVisible === false ? '' : 'btn-danger'}" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.toggleLeaderboard('${p.id}')">${p.leaderboardVisible === false ? '🏆 Show on Leaderboard' : '🚫 Remove from Leaderboard'}</button>
+              <button class="btn btn-danger" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.deleteRecord('${p.id}')">🗑️ Delete Registration</button>
             </div>
           </td>
         </tr>
@@ -612,6 +619,39 @@ const appInstance = {
       } catch (err) {
         console.error("Delete error:", err);
         alert("Failed to delete record.");
+      }
+    },
+
+    async toggleLeaderboard(id) {
+      const record = window.app.state.participantsHistory.find(p => p.id === id);
+      if (!record) return;
+
+      const currentlyVisible = record.leaderboardVisible !== false;
+      const nextVisible = !currentlyVisible;
+      const actionText = nextVisible ? 'show this participant on' : 'remove this participant from';
+
+      if (!confirm(`Are you sure you want to ${actionText} the public leaderboard? Their registration and scores will remain saved.`)) return;
+
+      try {
+        await updateDoc(doc(db, 'assessments', id), {
+          leaderboardVisible: nextVisible,
+          leaderboardUpdatedAt: new Date().toISOString()
+        });
+
+        const idx = window.app.state.participantsHistory.findIndex(p => p.id === id);
+        if (idx >= 0) {
+          window.app.state.participantsHistory[idx] = {
+            ...window.app.state.participantsHistory[idx],
+            leaderboardVisible: nextVisible,
+            leaderboardUpdatedAt: new Date().toISOString()
+          };
+        }
+
+        this.renderRegistrations();
+        if (window.app.state.currentView === 'leaderboard-view') window.app.leaderboard.render();
+      } catch (err) {
+        console.error('Leaderboard visibility update error:', err);
+        alert('Failed to update leaderboard visibility. Please check your admin permissions and internet connection.');
       }
     },
 
@@ -1090,7 +1130,7 @@ const appInstance = {
       });
 
       const fullRecord = {
-        ...p, overallScore: avgScore,
+        ...p, leaderboardVisible: true, overallScore: avgScore,
         rawMetrics: {
           darts: res.darts?.raw ?? 0, plank: res.plank?.raw ?? 0, pushups: res.pushups?.raw ?? 0,
           balance: res.balance?.raw ?? 0, reaction: res.reaction?.raw ?? 0
@@ -1205,7 +1245,7 @@ const appInstance = {
     render() {
       const tbody = document.getElementById('leaderboard-table-body');
       const headerTitle = document.getElementById('top-metric-header-title');
-      let list = [...window.app.state.participantsHistory];
+      let list = window.app.state.participantsHistory.filter(p => p.leaderboardVisible !== false);
       
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No participants recorded yet.</td></tr>`;
