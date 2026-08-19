@@ -87,6 +87,9 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 .modal-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; }
 .error-text { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; }
+.inline-status { margin-top: 0.85rem; padding: 0.7rem 0.9rem; border-radius: var(--radius-md); font-size: 0.85rem; display: none; }
+.inline-status.success { display: block; color: var(--green); background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3); }
+.inline-status.error { display: block; color: var(--red); background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); }
 @media print {
   body { background: #fff !important; color: #000 !important; }
   header, .nav-actions, .btn, .no-print { display: none !important; }
@@ -125,7 +128,7 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🧘</div><h3>Core Plank</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Core endurance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">💪</div><h3>Push-ups</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Upper body endurance</p></div>
       <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">⚖️</div><h3>Balance Master</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Single-leg balance</p></div>
-      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎾</div><h3>Reaction Catch</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Drop reaction time</p></div>
+      <div class="card" style="text-align: center;"><div style="font-size: 2rem; margin-bottom: 0.5rem;">🎾</div><h3>Reaction Catch</h3><p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Drop reaction drop distance</p></div>
     </div>
   </section>
 
@@ -273,17 +276,9 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
           </div>
           <div class="grid-2">
             <div class="form-group"><label for="cfg-plank-cap">Plank Max Cap (Seconds)</label><input type="number" id="cfg-plank-cap" class="form-control" value="180" min="30" max="600"></div>
-            <div class="form-group"><label for="cfg-balance-cap">Balance Max Cap (Seconds)</label><input type="number" id="cfg-balance-cap" class="form-control" value="60" min="10" max="300"></div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group"><label for="cfg-pushup-target">Push-ups Target for 100 Score</label><input type="number" id="cfg-pushup-target" class="form-control" value="40" min="1" max="200"></div>
-            <div class="form-group"><label for="cfg-reaction-best">Reaction Best Time (ms)</label><input type="number" id="cfg-reaction-best" class="form-control" value="150" min="50" max="300"></div>
-          </div>
-          <div class="grid-2">
-            <div class="form-group"><label for="cfg-reaction-worst">Reaction Worst Time (ms)</label><input type="number" id="cfg-reaction-worst" class="form-control" value="400" min="200" max="1000"></div>
             <div class="form-group"><label for="cfg-reaction-trials">Reaction Test Drop Count</label><input type="number" id="cfg-reaction-trials" class="form-control" value="3" min="1" max="10"></div>
           </div>
-          <p style="color:var(--text-muted);font-size:.82rem;margin-bottom:1rem;">Balanced scoring: each of the five stations contributes exactly 20% to the Overall Score. Admin score overrides remain fixed until edited again.</p><button type="submit" class="btn btn-primary">Save Exhibition Parameters</button>
+          <button type="submit" class="btn btn-primary">Save Exhibition Parameters</button>
         </form>
       </div>
 
@@ -357,72 +352,19 @@ header { position: sticky; top: 0; z-index: 100; background: rgba(7, 17, 31, 0.9
         <div class="form-group"><label>Weight (kg)</label><input type="number" id="edit-p-weight" class="form-control" required min="30" max="200"></div>
       </div>
       <hr style="border-color: var(--bg-card-hover); margin: 1rem 0;">
-      <h4 style="margin-bottom: 0.35rem; color: var(--cyan);">Performance Metrics & Scores</h4>
-      <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1rem;">
-        Edit the measured result and/or the final score. Scores are always kept between 0 and 100.
-        If you change a score manually, it is marked as an admin override and will not be recalculated.
-      </p>
-
+      <h4 style="margin-bottom: 0.8rem; color: var(--cyan);">Raw Metric Scores</h4>
       <div class="grid-2">
-        <div class="form-group">
-          <label>Darts Total Points</label>
-          <input type="number" id="edit-p-darts" class="form-control" min="0">
-        </div>
-        <div class="form-group">
-          <label>Darts Score (0–100)</label>
-          <input type="number" id="edit-s-darts" class="form-control" min="0" max="100">
-        </div>
-
-        <div class="form-group">
-          <label>Plank Duration (Seconds)</label>
-          <input type="number" step="0.1" id="edit-p-plank" class="form-control" min="0">
-        </div>
-        <div class="form-group">
-          <label>Plank Score (0–100)</label>
-          <input type="number" id="edit-s-plank" class="form-control" min="0" max="100">
-        </div>
-
-        <div class="form-group">
-          <label>Push-ups Reps</label>
-          <input type="number" id="edit-p-pushups" class="form-control" min="0">
-        </div>
-        <div class="form-group">
-          <label>Push-ups Score (0–100)</label>
-          <input type="number" id="edit-s-pushups" class="form-control" min="0" max="100">
-        </div>
-
-        <div class="form-group">
-          <label>Balance Hold (Seconds)</label>
-          <input type="number" step="0.1" id="edit-p-balance" class="form-control" min="0">
-        </div>
-        <div class="form-group">
-          <label>Balance Score (0–100)</label>
-          <input type="number" id="edit-s-balance" class="form-control" min="0" max="100">
-        </div>
+        <div class="form-group"><label>Darts Total Points</label><input type="number" id="edit-p-darts" class="form-control" min="0"></div>
+        <div class="form-group"><label>Plank Duration (Sec)</label><input type="number" id="edit-p-plank" class="form-control" min="0"></div>
       </div>
-
       <div class="grid-2">
-        <div class="form-group">
-          <label>Reaction Time (Milliseconds)</label>
-          <input type="number" id="edit-p-reaction" class="form-control" min="100" max="1000" step="1">
-        </div>
-        <div class="form-group">
-          <label>Reaction Score (0–100)</label>
-          <input type="number" id="edit-s-reaction" class="form-control" min="0" max="100">
-        </div>
+        <div class="form-group"><label>Push-ups Reps</label><input type="number" id="edit-p-pushups" class="form-control" min="0"></div>
+        <div class="form-group"><label>Balance Hold (Sec)</label><input type="number" step="0.1" id="edit-p-balance" class="form-control" min="0"></div>
       </div>
+      <div class="form-group"><label>Reaction Drop Distance (cm) <span style="color:var(--cyan);">0 cm = best, 15 cm = maximum</span></label><input type="number" id="edit-p-reaction" class="form-control" min="0" max="15" step="0.1" required></div>
+      <div id="admin-edit-status" class="inline-status" role="status" aria-live="polite"></div>
 
-      <div class="card" style="background:rgba(0,229,255,.05);border-color:var(--cyan);margin:0 0 1rem;">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <div>
-            <small style="color:var(--text-muted);">UPDATED OVERALL SCORE</small>
-            <div id="edit-overall-preview" style="font-size:2rem;font-weight:900;color:var(--cyan);">0 / 100</div>
-          </div>
-          <div id="edit-score-preview-category" class="badge-category badge-avg">AVERAGE</div>
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">💾 Save & Update Record</button>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem;">Save & Update Record</button>
     </form>
   </div>
 </div>
@@ -454,24 +396,14 @@ const stationMeta = {
   plank: { label: 'Core Plank Hold', name: 'Plank', emoji: '🧘' },
   pushups: { label: '30-Sec Push-ups', name: 'Push-ups', emoji: '💪' },
   balance: { label: 'Balance Master', name: 'Balance', emoji: '⚖️' },
-  reaction: { label: 'Reaction Time', name: 'Reaction', emoji: '🎾' }
+  reaction: { label: 'Reaction Drop Distance', name: 'Reaction', emoji: '🎾' }
 };
 
 let logoClickCount = 0;
 let logoClickTimer = null;
 
 const appInstance = {
-  config: {
-    dartThrows: 3,
-    pushupDuration: 30,
-    plankCap: 180,
-    balanceCap: 60,
-    pushupTarget: 40,
-    reactionBestMs: 150,
-    reactionWorstMs: 400,
-    reactionTrials: 3,
-    gravity: 9.81
-  },
+  config: { dartThrows: 3, pushupDuration: 30, plankCap: 180, reactionTrials: 3, reactionMaxCM: 15, gravity: 9.81 },
   state: {
     currentView: 'hero-view', currentParticipant: null, currentStationIndex: 0,
     stationResults: {}, activeTimer: null, timerSeconds: 0, participantsHistory: [], isAdmin: false
@@ -525,7 +457,7 @@ const appInstance = {
         plank: { raw: record.rawMetrics?.plank ?? record.scores.plank, score: record.scores.plank, category: window.app.scoring.getCategory(record.scores.plank) },
         pushups: { raw: record.rawMetrics?.pushups ?? record.scores.pushups, score: record.scores.pushups, category: window.app.scoring.getCategory(record.scores.pushups) },
         balance: { raw: record.rawMetrics?.balance ?? record.scores.balance, score: record.scores.balance, category: window.app.scoring.getCategory(record.scores.balance) },
-        reaction: { raw: record.rawMetrics?.reaction ?? record.scores.reactionMS, score: record.scores.reaction, category: window.app.scoring.getCategory(record.scores.reaction) }
+        reaction: { raw: record.rawMetrics?.reaction ?? record.scores.reactionDistanceCM ?? ((record.scores.reactionLegacyMS || 0) / 1000), score: record.scores.reaction, category: window.app.scoring.getCategory(record.scores.reaction) }
       };
 
       this.closeModal();
@@ -565,102 +497,71 @@ const appInstance = {
       document.getElementById('admin-view-registrations').style.display = tab === 'registrations' ? 'block' : 'none';
       document.getElementById('admin-view-settings').style.display = tab === 'settings' ? 'block' : 'none';
     },
-
     renderRegistrations() {
       const tbody = document.getElementById('admin-registrations-tbody');
       const queryStr = (document.getElementById('admin-search-input')?.value || '').toLowerCase();
       let list = [...window.app.state.participantsHistory];
 
       if (queryStr) {
-        list = list.filter(p =>
-          (p.name || '').toLowerCase().includes(queryStr) ||
-          (p.phone || '').includes(queryStr) ||
-          (p.id || '').toLowerCase().includes(queryStr)
-        );
+        list = list.filter(p => (p.name || '').toLowerCase().includes(queryStr) || (p.phone || '').includes(queryStr));
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);">No registration records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color: var(--text-muted);">No registration records found.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = list.map(p => `
         <tr>
-          <td><strong>${window.app.helpers.escape(p.name || '')}</strong><br><small style="color:var(--text-muted);">${window.app.helpers.escape(p.id || '')}</small></td>
-          <td>${window.app.helpers.escape(p.phone || 'N/A')}</td>
-          <td>${p.age ?? ''}</td>
-          <td>${window.app.helpers.escape(p.gender || '')}</td>
-          <td>${p.bmi ?? ''}</td>
+          <td><strong>${p.name}</strong></td>
+          <td>${p.phone || 'N/A'}</td>
+          <td>${p.age}</td>
+          <td>${p.gender}</td>
+          <td>${p.bmi}</td>
+          <td><strong style="color:var(--cyan);">${p.overallScore}</strong> / 100</td>
+          <td>${p.hiddenFromLeaderboard ? '<span style="color:var(--red);">Hidden</span>' : '<span style="color:var(--green);">Visible</span>'}</td>
           <td>
-            <strong style="color:var(--cyan);">${Number(p.overallScore || 0)}</strong> / 100
-            ${p.scoreOverrides ? '<br><small style="color:var(--yellow);">✎ Admin adjusted</small>' : ''}
-          </td>
-          <td>
-            ${p.leaderboardVisible === false
-              ? '<span style="color:var(--red);font-weight:700;">Hidden</span>'
-              : '<span style="color:var(--green);font-weight:700;">Visible</span>'}
-          </td>
-          <td>
-            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
-              <button class="btn btn-ghost" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.openEditModal('${p.id}')">✏️ Edit Registration & Scores</button>
-              <button class="btn ${p.leaderboardVisible === false ? '' : 'btn-danger'}" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.toggleLeaderboard('${p.id}')">${p.leaderboardVisible === false ? '🏆 Show on Leaderboard' : '🚫 Remove from Leaderboard'}</button>
-              <button class="btn btn-danger" style="padding:0.3rem 0.6rem;min-height:auto;font-size:0.8rem;" onclick="window.app.adminDashboard.deleteRecord('${p.id}')">🗑️ Delete Registration</button>
+            <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+              <button class="btn btn-ghost" style="padding:0.3rem 0.6rem; min-height:auto; font-size:0.8rem;" onclick="window.app.adminDashboard.openEditModal('${p.id}')">✏️ Edit</button>
+              <button class="btn" style="padding:0.3rem 0.6rem; min-height:auto; font-size:0.8rem;" onclick="window.app.adminDashboard.toggleLeaderboard('${p.id}')">${p.hiddenFromLeaderboard ? '👁️ Show' : '🚫 Hide'}</button>
+              <button class="btn btn-danger" style="padding:0.3rem 0.6rem; min-height:auto; font-size:0.8rem;" onclick="window.app.adminDashboard.deleteRecord('${p.id}')">🗑️ Delete</button>
             </div>
           </td>
         </tr>
       `).join('');
     },
-
+    async toggleLeaderboard(id) {
+      const record = window.app.state.participantsHistory.find(p => p.id === id);
+      if (!record) return;
+      const nextHidden = !record.hiddenFromLeaderboard;
+      try {
+        await updateDoc(doc(db, "assessments", id), { hiddenFromLeaderboard: nextHidden });
+      } catch (err) {
+        console.error('Leaderboard visibility update error:', err);
+        const message = err?.code?.includes('permission-denied')
+          ? 'Firebase rules are blocking this change. Allow authenticated admins to update assessments.'
+          : 'Could not change leaderboard visibility.';
+        // Reuse the edit status if the edit modal is open; otherwise use a short non-blocking status in the admin panel.
+        const search = document.getElementById('admin-search-input');
+        if (search) {
+          search.setAttribute('title', message);
+          search.placeholder = message;
+          setTimeout(() => { search.placeholder = '🔍 Search participant name/phone...'; }, 2500);
+        }
+      }
+    },
     async deleteRecord(id) {
       if (!confirm("Are you sure you want to delete this participant record?")) return;
       try {
         await deleteDoc(doc(db, "assessments", id));
-        alert("Record deleted successfully.");
       } catch (err) {
         console.error("Delete error:", err);
-        alert("Failed to delete record.");
+        console.error("Failed to delete record:", err);
       }
     },
-
-    async toggleLeaderboard(id) {
-      const record = window.app.state.participantsHistory.find(p => p.id === id);
-      if (!record) return;
-
-      const currentlyVisible = record.leaderboardVisible !== false;
-      const nextVisible = !currentlyVisible;
-      const actionText = nextVisible ? 'show this participant on' : 'remove this participant from';
-
-      if (!confirm(`Are you sure you want to ${actionText} the public leaderboard? Their registration and scores will remain saved.`)) return;
-
-      try {
-        await updateDoc(doc(db, 'assessments', id), {
-          leaderboardVisible: nextVisible,
-          leaderboardUpdatedAt: new Date().toISOString()
-        });
-
-        const idx = window.app.state.participantsHistory.findIndex(p => p.id === id);
-        if (idx >= 0) {
-          window.app.state.participantsHistory[idx] = {
-            ...window.app.state.participantsHistory[idx],
-            leaderboardVisible: nextVisible,
-            leaderboardUpdatedAt: new Date().toISOString()
-          };
-        }
-
-        this.renderRegistrations();
-        if (window.app.state.currentView === 'leaderboard-view') window.app.leaderboard.render();
-      } catch (err) {
-        console.error('Leaderboard visibility update error:', err);
-        alert('Failed to update leaderboard visibility. Please check your admin permissions and internet connection.');
-      }
-    },
-
     openEditModal(id) {
       const record = window.app.state.participantsHistory.find(p => p.id === id);
       if (!record) return;
-
-      const scores = record.scores || {};
-      const raw = record.rawMetrics || {};
 
       document.getElementById('edit-p-id').value = record.id;
       document.getElementById('edit-p-name').value = record.name || '';
@@ -670,124 +571,90 @@ const appInstance = {
       document.getElementById('edit-p-height').value = record.height || '';
       document.getElementById('edit-p-weight').value = record.weight || '';
 
-      document.getElementById('edit-p-darts').value = raw.darts ?? 0;
-      document.getElementById('edit-p-plank').value = raw.plank ?? 0;
-      document.getElementById('edit-p-pushups').value = raw.pushups ?? 0;
-      document.getElementById('edit-p-balance').value = raw.balance ?? 0;
-      document.getElementById('edit-p-reaction').value = raw.reaction ?? scores.reactionMS ?? 250;
-
-      document.getElementById('edit-s-darts').value = scores.darts ?? window.app.scoring.normalize('darts', raw.darts ?? 0);
-      document.getElementById('edit-s-plank').value = scores.plank ?? window.app.scoring.normalize('plank', raw.plank ?? 0);
-      document.getElementById('edit-s-pushups').value = scores.pushups ?? window.app.scoring.normalize('pushups', raw.pushups ?? 0);
-      document.getElementById('edit-s-balance').value = scores.balance ?? window.app.scoring.normalize('balance', raw.balance ?? 0);
-      document.getElementById('edit-s-reaction').value = scores.reaction ?? window.app.scoring.normalize('reaction', raw.reaction ?? 250);
-
-      this.updateScorePreview();
-      ['edit-p-darts','edit-p-plank','edit-p-pushups','edit-p-balance','edit-p-reaction',
-       'edit-s-darts','edit-s-plank','edit-s-pushups','edit-s-balance','edit-s-reaction']
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.oninput = () => this.updateScorePreview();
-        });
+      document.getElementById('edit-p-darts').value = record.rawMetrics?.darts ?? record.scores?.darts ?? 0;
+      document.getElementById('edit-p-plank').value = record.rawMetrics?.plank ?? record.scores?.plank ?? 0;
+      document.getElementById('edit-p-pushups').value = record.rawMetrics?.pushups ?? record.scores?.pushups ?? 0;
+      document.getElementById('edit-p-balance').value = record.rawMetrics?.balance ?? record.scores?.balance ?? 0;
+      document.getElementById('edit-p-reaction').value = this.getReactionCM(record).toFixed(1);
+      this.setEditStatus('', '');
 
       document.getElementById('admin-edit-modal').classList.add('active');
     },
-
-    updateScorePreview() {
-      const ids = ['edit-s-darts','edit-s-plank','edit-s-pushups','edit-s-balance','edit-s-reaction'];
-      const scores = ids.map(id => Math.min(100, Math.max(0, Number(document.getElementById(id)?.value) || 0)));
-      const overall = window.app.scoring.overall({
-        darts:scores[0], plank:scores[1], pushups:scores[2], balance:scores[3], reaction:scores[4]
-      });
-      const cat = window.app.scoring.getCategory(overall);
-      const preview = document.getElementById('edit-overall-preview');
-      const badge = document.getElementById('edit-score-preview-category');
-      if (preview) preview.textContent = `${overall} / 100`;
-      if (badge) {
-        badge.className = `badge-category badge-${cat.css}`;
-        badge.textContent = cat.label;
-      }
+    getReactionCM(record) {
+      const raw = Number(record?.rawMetrics?.reaction);
+      if (Number.isFinite(raw)) return Math.max(0, Math.min(15, raw));
+      const oldCM = Number(record?.scores?.reactionDistanceCM);
+      return Number.isFinite(oldCM) ? Math.max(0, Math.min(15, oldCM)) : 0;
     },
-
+    setEditStatus(message, type) {
+      const el = document.getElementById('admin-edit-status');
+      if (!el) return;
+      el.textContent = message || '';
+      el.className = 'inline-status' + (type ? ` ${type}` : '');
+    },
     closeEditModal() {
+      this.setEditStatus('', '');
       document.getElementById('admin-edit-modal').classList.remove('active');
     },
-
     async saveParticipantEdit(e) {
       e.preventDefault();
-
       const id = document.getElementById('edit-p-id').value;
-      const hCm = parseFloat(document.getElementById('edit-p-height').value);
+      const h = parseFloat(document.getElementById('edit-p-height').value) / 100;
       const w = parseFloat(document.getElementById('edit-p-weight').value);
-      const h = hCm / 100;
+      const reactionCM = Math.max(0, Math.min(15, parseFloat(document.getElementById('edit-p-reaction').value) || 0));
       const bmi = h > 0 && w > 0 ? Number((w / (h * h)).toFixed(1)) : 0;
 
-      const rawMetrics = {
-        darts: Math.max(0, Number(document.getElementById('edit-p-darts').value) || 0),
-        plank: Math.max(0, Number(document.getElementById('edit-p-plank').value) || 0),
-        pushups: Math.max(0, Number(document.getElementById('edit-p-pushups').value) || 0),
-        balance: Math.max(0, Number(document.getElementById('edit-p-balance').value) || 0),
-        reaction: Math.max(100, Number(document.getElementById('edit-p-reaction').value) || 250)
-      };
+      const dartsRaw = Math.max(0, parseInt(document.getElementById('edit-p-darts').value) || 0);
+      const plankRaw = Math.max(0, parseFloat(document.getElementById('edit-p-plank').value) || 0);
+      const pushupsRaw = Math.max(0, parseInt(document.getElementById('edit-p-pushups').value) || 0);
+      const balanceRaw = Math.max(0, parseFloat(document.getElementById('edit-p-balance').value) || 0);
 
-      const scores = {
-        darts: Math.min(100, Math.max(0, Number(document.getElementById('edit-s-darts').value) || 0)),
-        plank: Math.min(100, Math.max(0, Number(document.getElementById('edit-s-plank').value) || 0)),
-        pushups: Math.min(100, Math.max(0, Number(document.getElementById('edit-s-pushups').value) || 0)),
-        balance: Math.min(100, Math.max(0, Number(document.getElementById('edit-s-balance').value) || 0)),
-        reaction: Math.min(100, Math.max(0, Number(document.getElementById('edit-s-reaction').value) || 0))
-      };
-
-      const overallScore = window.app.scoring.overall(scores);
-      const existing = window.app.state.participantsHistory.find(p => p.id === id) || {};
+      const dartsScore = window.app.scoring.normalize('darts', dartsRaw);
+      const plankScore = window.app.scoring.normalize('plank', plankRaw);
+      const pushupsScore = window.app.scoring.normalize('pushups', pushupsRaw);
+      const balanceScore = window.app.scoring.normalize('balance', balanceRaw);
+      const reactionScore = window.app.scoring.normalize('reaction', reactionCM);
+      const overallScore = window.app.scoring.calculateOverall({ darts: dartsScore, plank: plankScore, pushups: pushupsScore, balance: balanceScore, reaction: reactionScore });
 
       const updatedData = {
         name: document.getElementById('edit-p-name').value.trim(),
         phone: document.getElementById('edit-p-phone').value.trim(),
         age: parseInt(document.getElementById('edit-p-age').value),
         gender: document.getElementById('edit-p-gender').value,
-        height: hCm,
+        height: h * 100,
         weight: w,
         bmi,
         overallScore,
-        rawMetrics,
+        rawMetrics: { darts: dartsRaw, plank: plankRaw, pushups: pushupsRaw, balance: balanceRaw, reaction: reactionCM },
         scores: {
-          ...scores,
-          reactionMS: rawMetrics.reaction
-        },
-        scoreOverrides: {
-          darts: true,
-          plank: true,
-          pushups: true,
-          balance: true,
-          reaction: true
-        },
-        scoreEditedByAdmin: true,
-        scoreEditedAt: new Date().toISOString()
+          darts: dartsScore,
+          plank: plankScore,
+          pushups: pushupsScore,
+          balance: balanceScore,
+          reaction: reactionScore,
+          reactionDistanceCM: reactionCM
+        }
       };
 
+      this.setEditStatus('Saving changes…', '');
       try {
+        if (!window.app.state.isAdmin) throw new Error('ADMIN_NOT_AUTHENTICATED');
         await updateDoc(doc(db, "assessments", id), updatedData);
-
-        // Keep the local in-memory record immediately in sync.
-        const idx = window.app.state.participantsHistory.findIndex(p => p.id === id);
-        if (idx >= 0) {
-          window.app.state.participantsHistory[idx] = { ...existing, ...updatedData, id };
-        }
-
-        this.closeEditModal();
-        this.renderRegistrations();
-
-        if (window.app.state.currentView === 'leaderboard-view') {
-          window.app.leaderboard.render();
-        }
-
-        alert(`Participant updated successfully. New overall score: ${overallScore}/100`);
+        this.setEditStatus('Participant updated successfully.', 'success');
+        setTimeout(() => this.closeEditModal(), 500);
       } catch (err) {
-        console.error("Update error:", err);
-        alert("Failed to update participant. Please check your admin permissions and internet connection.");
+        console.error('Update error:', err);
+        const code = err?.code || '';
+        if (code.includes('permission-denied') || code.includes('unauthenticated')) {
+          this.setEditStatus('Update blocked by Firebase Firestore security rules. You are logged in, but the rules must allow an authenticated admin to update assessments. See the rules below.', 'error');
+        } else if (err?.message === 'ADMIN_NOT_AUTHENTICATED') {
+          this.setEditStatus('Admin session is not active. Please log in again.', 'error');
+        } else {
+          this.setEditStatus(`Update failed${code ? ` (${code})` : ''}. Check the browser console for the exact Firebase error.`, 'error');
+        }
       }
     }
+
   },
 
   storage: {
@@ -797,7 +664,7 @@ const appInstance = {
       });
       const q = query(assessmentsCol, orderBy("overallScore", "desc"), limit(100));
       onSnapshot(q, (snapshot) => {
-        window.app.state.participantsHistory = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        window.app.state.participantsHistory = snapshot.docs.map(d => window.app.scoring.normalizeRecord({ id: d.id, ...d.data() }));
         if (window.app.state.currentView === 'leaderboard-view') window.app.leaderboard.render();
         if (window.app.state.currentView === 'organizer-view') window.app.adminDashboard.renderRegistrations();
       }, (err) => console.error("Firestore sync error:", err));
@@ -809,9 +676,9 @@ const appInstance = {
     exportCSV() {
       const list = window.app.state.participantsHistory;
       if (list.length === 0) { alert("No records available to export."); return; }
-      let csv = "ID,Name,Phone,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionMS\n";
+      let csv = "ID,Name,Phone,Age,Gender,BMI,OverallScore,Darts,Plank,Pushups,Balance,ReactionDistanceCM\n";
       list.forEach(p => {
-        csv += `"${p.id}","${p.name}","${p.phone || ''}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.scores.reactionMS}\n`;
+        csv += `"${p.id}","${p.name}","${p.phone || ''}",${p.age},"${p.gender}",${p.bmi},${p.overallScore},${p.scores.darts},${p.scores.plank},${p.scores.pushups},${p.scores.balance},${p.rawMetrics?.reaction ?? p.scores.reactionDistanceCM ?? 0}\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
@@ -823,14 +690,6 @@ const appInstance = {
       const snapshot = await getDocs(assessmentsCol);
       await Promise.all(snapshot.docs.map(d => deleteDoc(d.ref)));
       alert("Cloud records cleared.");
-    }
-  },
-
-  helpers: {
-    escape(value) {
-      return String(value ?? '').replace(/[&<>"']/g, ch => ({
-        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
-      }[ch]));
     }
   },
 
@@ -957,10 +816,11 @@ const appInstance = {
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('balance')">Submit Score</button>`;
       } else if (station.id === 'reaction') {
-        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Catch dropped ruler. Record drop distance in cm to convert to reaction time.</p>
+        html += `<p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Catch the dropped ruler and record the drop distance in centimetres. A smaller distance earns a higher score.</p>
           <div class="form-group" style="max-width: 320px; margin: 0 auto;">
-            <label for="reaction-dist-input">Recorded Drop Distance (cm)</label>
-            <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 15" min="1" max="100">
+            <label for="reaction-dist-input">Reaction Drop Distance (cm)</label>
+            <input type="number" id="reaction-dist-input" class="form-control" placeholder="e.g. 7.5" min="0" max="15" step="0.1" required>
+            <small style="display:block; color:var(--text-muted); margin-top:0.4rem;">Scoring: 0 cm = 100, 15 cm = 0.</small>
           </div>
           <button class="btn btn-primary" style="margin-top: 1.5rem; width: 100%;" onclick="window.app.testing.saveStationScore('reaction')">Submit Score</button>`;
       }
@@ -1022,10 +882,7 @@ const appInstance = {
       else if (type === 'pushups') rawVal = parseInt(document.getElementById('pushup-count-input').value) || 0;
       else if (type === 'balance') rawVal = parseFloat(document.getElementById('balance-input-score').value) || 0;
       else if (type === 'reaction') {
-        const distCM = parseFloat(document.getElementById('reaction-dist-input').value) || 30;
-        const distMeters = distCM / 100;
-        const timeSec = Math.sqrt((2 * distMeters) / window.app.config.gravity);
-        rawVal = Math.round(timeSec * 1000);
+        rawVal = Math.max(0, Math.min(15, parseFloat(document.getElementById('reaction-time-input').value) || 0));
       }
       const normalizedScore = window.app.scoring.normalize(type, rawVal);
       const category = window.app.scoring.getCategory(normalizedScore);
@@ -1054,64 +911,55 @@ const appInstance = {
   },
 
   scoring: {
-    /*
-      BALANCED FIT5 SCORE SYSTEM
-      Every station produces a normalized 0–100 score.
-      Overall score = simple average of the five station scores,
-      so every exercise contributes exactly 20%.
-
-      Targets:
-      - Darts: full score at 3 × 50 = 150 points
-      - Plank: full score at 180 seconds
-      - Push-ups: full score at 40 reps in the configured time
-      - Balance: full score at 60 seconds
-      - Reaction: 100% at 150 ms or faster; 0% at 400 ms or slower
-    */
+    // Every station is normalized to the same 0–100 scale.
+    // The overall FIT5 score is an equal-weight average: 20% per station.
     normalize(type, raw) {
-      const cfg = window.app.config;
       const value = Number(raw);
-
       if (!Number.isFinite(value)) return 0;
-
       let score = 0;
-
       if (type === 'darts') {
-        const maxDarts = Math.max(1, Number(cfg.dartThrows) || 3);
-        const maxPoints = maxDarts * 50;
-        score = (value / maxPoints) * 100;
+        // Standard dart maximum: 60 points per throw.
+        const max = window.app.config.dartThrows * 60;
+        score = max > 0 ? (value / max) * 100 : 0;
       } else if (type === 'plank') {
-        const cap = Math.max(1, Number(cfg.plankCap) || 180);
-        score = (value / cap) * 100;
+        score = (value / window.app.config.plankCap) * 100;
       } else if (type === 'pushups') {
-        const target = Math.max(1, Number(cfg.pushupTarget) || 40);
-        score = (value / target) * 100;
+        score = (value / 40) * 100;
       } else if (type === 'balance') {
-        const cap = Math.max(1, Number(cfg.balanceCap) || 60);
-        score = (value / cap) * 100;
+        score = (value / 60) * 100;
       } else if (type === 'reaction') {
-        const best = Math.max(1, Number(cfg.reactionBestMs) || 150);
-        const worst = Math.max(best + 1, Number(cfg.reactionWorstMs) || 400);
-        score = ((worst - value) / (worst - best)) * 100;
+        // Reaction is an inverse scale: 0 sec = 100, 15 sec = 0.
+        score = ((15 - value) / 15) * 100;
       }
-
       return Math.min(100, Math.max(0, Math.round(score)));
     },
-
-    overall(scores) {
-      const values = ['darts','plank','pushups','balance','reaction']
-        .map(k => Number(scores?.[k]))
-        .filter(v => Number.isFinite(v));
-
-      if (!values.length) return 0;
-      return Math.round(values.reduce((a,b) => a+b, 0) / 5);
+    calculateOverall(scores) {
+      const keys = ['darts', 'plank', 'pushups', 'balance', 'reaction'];
+      return Math.round(keys.reduce((sum, key) => sum + (Number(scores?.[key]) || 0), 0) / keys.length);
     },
-
+    normalizeRecord(record) {
+      const raw = record?.rawMetrics || {};
+      const reactionCM = Number(raw.reaction);
+      const reactionDistanceCM = Number.isFinite(reactionCM) ? Math.max(0, Math.min(15, reactionCM)) : 0;
+      const scores = {
+        darts: this.normalize('darts', raw.darts ?? 0),
+        plank: this.normalize('plank', raw.plank ?? 0),
+        pushups: this.normalize('pushups', raw.pushups ?? 0),
+        balance: this.normalize('balance', raw.balance ?? 0),
+        reaction: this.normalize('reaction', reactionDistanceCM)
+      };
+      return {
+        ...record,
+        overallScore: this.calculateOverall(scores),
+        rawMetrics: { ...raw, reaction: reactionDistanceCM },
+        scores: { ...record.scores, ...scores, reactionDistanceCM }
+      };
+    },
     getCategory(score) {
-      const s = Number(score) || 0;
-      if (s >= 85) return { label: 'EXCELLENT', css: 'excellent' };
-      if (s >= 70) return { label: 'VERY GOOD', css: 'vgood' };
-      if (s >= 55) return { label: 'GOOD', css: 'good' };
-      if (s >= 40) return { label: 'AVERAGE', css: 'avg' };
+      if (score >= 85) return { label: 'EXCELLENT', css: 'excellent' };
+      if (score >= 70) return { label: 'VERY GOOD', css: 'vgood' };
+      if (score >= 55) return { label: 'GOOD', css: 'good' };
+      if (score >= 40) return { label: 'AVERAGE', css: 'avg' };
       return { label: 'NEEDS IMPROVEMENT', css: 'needs-imp' };
     }
   },
@@ -1121,25 +969,18 @@ const appInstance = {
       const p = window.app.state.currentParticipant;
       const res = window.app.state.stationResults;
       const keys = ['darts', 'plank', 'pushups', 'balance', 'reaction'];
-      const avgScore = window.app.scoring.overall({
-        darts: res.darts?.score || 0,
-        plank: res.plank?.score || 0,
-        pushups: res.pushups?.score || 0,
-        balance: res.balance?.score || 0,
-        reaction: res.reaction?.score || 0
-      });
+      const avgScore = window.app.scoring.calculateOverall(Object.fromEntries(keys.map(k => [k, res[k]?.score || 0])));
 
       const fullRecord = {
-        ...p, leaderboardVisible: true, overallScore: avgScore,
+        ...p, overallScore: avgScore,
         rawMetrics: {
           darts: res.darts?.raw ?? 0, plank: res.plank?.raw ?? 0, pushups: res.pushups?.raw ?? 0,
           balance: res.balance?.raw ?? 0, reaction: res.reaction?.raw ?? 0
         },
         scores: {
           darts: res.darts?.score || 0, plank: res.plank?.score || 0, pushups: res.pushups?.score || 0,
-          balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionMS: res.reaction?.raw ?? null
-        },
-        scoreSystem: 'FIT5_BALANCED_V2' 
+          balance: res.balance?.score || 0, reaction: res.reaction?.score || 0, reactionDistanceCM: res.reaction?.raw ?? null, reactionLegacyMS: res.reaction?.raw != null ? Math.round(Number(res.reaction.raw) * 1000) : null
+        }
       };
       window.app.storage.saveRecord(fullRecord);
       this.renderSavedReport(fullRecord);
@@ -1154,8 +995,8 @@ const appInstance = {
       const strokeOffset = 440 - (440 * record.overallScore) / 100;
       document.getElementById('report-score-ring').style.strokeDashoffset = strokeOffset;
 
-      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: '30-Sec Push-ups', balance: 'Balance Master', reaction: 'Reaction Time' };
-      const rowUnit = { darts: 'pts', plank: 'sec', pushups: 'reps', balance: 'sec', reaction: 'ms' };
+      const rowLabel = { darts: 'Dart Precision', plank: 'Core Plank Hold', pushups: '30-Sec Push-ups', balance: 'Balance Master', reaction: 'Reaction Catch' };
+      const rowUnit = { darts: 'pts', plank: 'sec', pushups: 'reps', balance: 'sec', reaction: 'cm' };
       const tbody = document.getElementById('report-table-body');
       tbody.innerHTML = keys.map(k => {
         const r = res[k];
@@ -1245,7 +1086,7 @@ const appInstance = {
     render() {
       const tbody = document.getElementById('leaderboard-table-body');
       const headerTitle = document.getElementById('top-metric-header-title');
-      let list = window.app.state.participantsHistory.filter(p => p.leaderboardVisible !== false);
+      let list = [...window.app.state.participantsHistory];
       
       if (list.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">No participants recorded yet.</td></tr>`;
@@ -1289,10 +1130,6 @@ const appInstance = {
       document.getElementById('cfg-dart-throws').value = window.app.config.dartThrows;
       document.getElementById('cfg-pushup-timer').value = window.app.config.pushupDuration;
       document.getElementById('cfg-plank-cap').value = window.app.config.plankCap;
-      document.getElementById('cfg-balance-cap').value = window.app.config.balanceCap;
-      document.getElementById('cfg-pushup-target').value = window.app.config.pushupTarget;
-      document.getElementById('cfg-reaction-best').value = window.app.config.reactionBestMs;
-      document.getElementById('cfg-reaction-worst').value = window.app.config.reactionWorstMs;
       document.getElementById('cfg-reaction-trials').value = window.app.config.reactionTrials;
     },
     saveSettings(e) {
@@ -1300,10 +1137,6 @@ const appInstance = {
       window.app.config.dartThrows = parseInt(document.getElementById('cfg-dart-throws').value);
       window.app.config.pushupDuration = parseInt(document.getElementById('cfg-pushup-timer').value);
       window.app.config.plankCap = parseInt(document.getElementById('cfg-plank-cap').value);
-      window.app.config.balanceCap = parseInt(document.getElementById('cfg-balance-cap').value);
-      window.app.config.pushupTarget = parseInt(document.getElementById('cfg-pushup-target').value);
-      window.app.config.reactionBestMs = parseInt(document.getElementById('cfg-reaction-best').value);
-      window.app.config.reactionWorstMs = parseInt(document.getElementById('cfg-reaction-worst').value);
       window.app.config.reactionTrials = parseInt(document.getElementById('cfg-reaction-trials').value);
       localStorage.setItem('fit5_config', JSON.stringify(window.app.config));
       alert("Exhibition settings updated successfully!");
@@ -1322,13 +1155,7 @@ window.addEventListener('keydown', (e) => {
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedConfig = localStorage.getItem('fit5_config');
-  if (savedConfig) {
-    try {
-      window.app.config = { ...window.app.config, ...JSON.parse(savedConfig) };
-    } catch (e) {
-      console.warn('Invalid saved FIT5 config; using defaults.');
-    }
-  }
+  if (savedConfig) window.app.config = JSON.parse(savedConfig);
   window.app.storage.init();
 });
 </script>
